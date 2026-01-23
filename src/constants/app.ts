@@ -1,4 +1,5 @@
 import { NoteColor, WallType } from '../types';
+import { LucideIcon } from 'lucide-react';
 import { Square, Image as ImageIcon, Moon, Layers, Layout } from 'lucide-react';
 
 export const COLORS: NoteColor[] = [
@@ -13,7 +14,7 @@ export const ALL_COLORS: NoteColor[] = [
 export interface WallOption {
   id: WallType;
   name: string;
-  icon: any;
+  icon: LucideIcon;
 }
 
 export const WALLS: WallOption[] = [
@@ -42,6 +43,5 @@ export const Z_INDEX = {
   NOTE_RESIZE_HANDLE: 70,
   NOTE_TOOLBAR: 50,
   NOTE_CONTENT: 10,
-  AI_PANEL: 60,
   STYLE_PANEL: 60
 } as const;

@@ -17,7 +17,10 @@ const App: React.FC = () => {
   const [wallType, setWallType] = useState<WallType>(() => {
     try {
       const saved = localStorage.getItem('wall_style_v10');
-      return (saved as WallType) || 'minimal';
+      if (saved && ['minimal', 'brick', 'wood', 'concrete', 'studio'].includes(saved)) {
+        return saved as WallType;
+      }
+      return 'minimal';
     } catch {
       return 'minimal';
     }
