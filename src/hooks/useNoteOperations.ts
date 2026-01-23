@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { Note, NoteColor } from '../types';
 import { COLORS, NOTE_DIMENSIONS } from '../constants/app';
-import { soundService } from '../services/soundService';
 
 export function useNoteOperations() {
   const generateId = useCallback(() => {
@@ -32,11 +31,5 @@ export function useNoteOperations() {
     };
   }, [generateId, calculatePosition]);
 
-  const addNote = useCallback((color?: NoteColor, imageUrl?: string, text?: string): Note => {
-    const newNote = createNote(color, imageUrl, text);
-    soundService.playStick();
-    return newNote;
-  }, [createNote]);
-
-  return { addNote, createNote };
+  return { createNote };
 }

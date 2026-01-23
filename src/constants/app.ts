@@ -2,11 +2,13 @@ import { NoteColor, WallType } from '../types';
 import { Square, Image as ImageIcon, Moon, Layers, Layout } from 'lucide-react';
 
 export const COLORS: NoteColor[] = [
-  'yellow', 'pink', 'blue', 'green', 'orange', 'purple',
-  'cream', 'mint', 'coral', 'lavender', 'sage', 'peach', 'sky', 'tan'
+  'yellow', 'pink', 'blue', 'green', 'orange', 'purple'
 ];
 
-export const ALL_COLORS: NoteColor[] = [...COLORS, 'glass'];
+export const ALL_COLORS: NoteColor[] = [
+  'yellow', 'pink', 'blue', 'green', 'orange', 'purple',
+  'cream', 'mint', 'coral', 'lavender', 'sage', 'peach', 'sky', 'tan', 'glass'
+];
 
 export interface WallOption {
   id: WallType;

@@ -27,7 +27,7 @@ const App: React.FC = () => {
   const initialLoadRef = useRef(false);
 
   useWallStyle(wallType);
-  const { addNote: createNote } = useNoteOperations();
+  const { createNote } = useNoteOperations();
 
   // Initialize with tutorial note if no notes exist
   useEffect(() => {
