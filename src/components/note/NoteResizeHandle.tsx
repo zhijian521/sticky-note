@@ -5,9 +5,11 @@ interface NoteResizeHandleProps {
   onResizeStart: (e: React.MouseEvent) => void;
 }
 
-const MIN_SIZE = 180;
+// const MIN_SIZE = 180;
 
-const NoteResizeHandle: React.FC<NoteResizeHandleProps> = ({ onResizeStart }) => {
+const NoteResizeHandle: React.FC<NoteResizeHandleProps> = ({
+  onResizeStart,
+}) => {
   return (
     <div
       onMouseDown={onResizeStart}
@@ -15,7 +17,12 @@ const NoteResizeHandle: React.FC<NoteResizeHandleProps> = ({ onResizeStart }) =>
       style={{ zIndex: Z_INDEX.NOTE_RESIZE_HANDLE }}
       aria-label="Resize note"
     >
-      <svg viewBox="0 0 1024 1024" width="12" height="12" className="fill-black/60">
+      <svg
+        viewBox="0 0 1024 1024"
+        width="12"
+        height="12"
+        className="fill-black/60"
+      >
         <path d="M768 0h256v256H768zM768 384h256v256H768zM384 384h256v256H384zM768 768h256v256H768zM384 768h256v256H384zM0 768h256v256H0z" />
       </svg>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, RefObject } from 'react';
 import { Plus, Command } from 'lucide-react';
 import { Note, WallType, COLOR_MAP } from './types';
 import StickyNote from './components/StickyNote';
@@ -10,14 +10,21 @@ import { useNoteOperations } from './hooks/useNoteOperations';
 import { useWallStyle } from './hooks/useWallStyle';
 import { useClickOutside } from './hooks/useClickOutside';
 
-const TUTORIAL_NOTE_TEXT = "欢迎使用 WallNotes！\n\n这是一块模拟真实物理质感的空间：\n\n• 拖拽便签即可移动位置\n• 拖动右下角图标调整大小\n• 点击便签文字开始编辑\n• 下方工具栏可创建新便签及更换墙壁皮肤\n\n尽情发挥你的创意吧！";
+const TUTORIAL_NOTE_TEXT =
+  '欢迎使用 WallNotes！\n\n这是一块模拟真实物理质感的空间：\n\n• 拖拽便签即可移动位置\n• 拖动右下角图标调整大小\n• 点击便签文字开始编辑\n• 下方工具栏可创建新便签及更换墙壁皮肤\n\n尽情发挥你的创意吧！';
 
 const App: React.FC = () => {
-  const [notes, setNotes, isNotesLoaded] = useLocalStorage<Note[]>('wallnotes_v11', []);
+  const [notes, setNotes, isNotesLoaded] = useLocalStorage<Note[]>(
+    'wallnotes_v11',
+    []
+  );
   const [wallType, setWallType] = useState<WallType>(() => {
     try {
       const saved = localStorage.getItem('wall_style_v10');
-      if (saved && ['minimal', 'brick', 'wood', 'concrete', 'studio'].includes(saved)) {
+      if (
+        saved &&
+        ['minimal', 'brick', 'wood', 'concrete', 'studio'].includes(saved)
+      ) {
         return saved as WallType;
       }
       return 'minimal';
@@ -42,7 +49,11 @@ const App: React.FC = () => {
   }, [isNotesLoaded, notes, createNote, setNotes]);
 
   // Click outside handler for wall menu
-  useClickOutside(wallMenuRef, () => setIsWallMenuOpen(false), isWallMenuOpen);
+  useClickOutside(
+    wallMenuRef as RefObject<HTMLElement>,
+    () => setIsWallMenuOpen(false),
+    isWallMenuOpen
+  );
 
   const addNote = (color?: Note['color']) => {
     const newNote = createNote(color);
@@ -50,7 +61,7 @@ const App: React.FC = () => {
   };
 
   const updateNote = (id: string, updates: Partial<Note>) => {
-    setNotes(prev => prev.map(n => n.id === id ? { ...n, ...updates } : n));
+    setNotes(prev => prev.map(n => (n.id === id ? { ...n, ...updates } : n)));
   };
 
   const deleteNote = (id: string) => {
@@ -58,7 +69,9 @@ const App: React.FC = () => {
   };
 
   const focusNote = (id: string) => {
-    setNotes(prev => prev.map(n => n.id === id ? { ...n, lastFocusedAt: Date.now() } : n));
+    setNotes(prev =>
+      prev.map(n => (n.id === id ? { ...n, lastFocusedAt: Date.now() } : n))
+    );
   };
 
   const sortedNotes = useMemo(() => {
@@ -66,8 +79,16 @@ const App: React.FC = () => {
   }, [notes]);
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden">
-      <div className="absolute inset-0" style={{ zIndex: Z_INDEX.BASE }}>
+    <div
+      className="relative w-screen h-screen overflow-hidden"
+      role="application"
+      aria-label="Sticky Notes Wall"
+    >
+      <div
+        className="absolute inset-0"
+        style={{ zIndex: Z_INDEX.BASE }}
+        aria-label="Notes container"
+      >
         <AnimatePresence>
           {sortedNotes.map((note, index) => (
             <StickyNote
@@ -82,7 +103,10 @@ const App: React.FC = () => {
         </AnimatePresence>
       </div>
 
-      <div className="fixed bottom-10 left-1/2 -translate-x-1/2" style={{ zIndex: Z_INDEX.DOCK }}>
+      <div
+        className="fixed bottom-10 left-1/2 -translate-x-1/2"
+        style={{ zIndex: Z_INDEX.DOCK }}
+      >
         <motion.div
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -109,7 +133,10 @@ const App: React.FC = () => {
             <span>New Note</span>
           </button>
 
-          <div className="flex gap-1 ml-2 px-4 border-l border-black/5 relative" ref={wallMenuRef}>
+          <div
+            className="flex gap-1 ml-2 px-4 border-l border-black/5 relative"
+            ref={wallMenuRef}
+          >
             <button
               onClick={() => setIsWallMenuOpen(!isWallMenuOpen)}
               className={`p-2.5 rounded-xl transition-colors ${isWallMenuOpen ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
@@ -130,7 +157,10 @@ const App: React.FC = () => {
                   {WALLS.map(w => (
                     <button
                       key={w.id}
-                      onClick={() => { setWallType(w.id); setIsWallMenuOpen(false); }}
+                      onClick={() => {
+                        setWallType(w.id);
+                        setIsWallMenuOpen(false);
+                      }}
                       className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold transition-colors ${wallType === w.id ? 'bg-gray-900 text-white' : 'hover:bg-gray-50 text-gray-600'}`}
                     >
                       <w.icon size={16} /> {w.name}

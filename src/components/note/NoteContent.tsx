@@ -16,10 +16,6 @@ const NoteContent: React.FC<NoteContentProps> = ({ note, onUpdate }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    setTempText(note.text);
-  }, [note.text]);
-
-  useEffect(() => {
     if (isEditing && textareaRef.current) {
       textareaRef.current.focus();
       textareaRef.current.setSelectionRange(
@@ -35,7 +31,10 @@ const NoteContent: React.FC<NoteContentProps> = ({ note, onUpdate }) => {
   };
 
   return (
-    <div className="relative flex-grow flex flex-col overflow-hidden" style={{ zIndex: Z_INDEX.NOTE_CONTENT }}>
+    <div
+      className="relative flex-grow flex flex-col overflow-hidden"
+      style={{ zIndex: Z_INDEX.NOTE_CONTENT }}
+    >
       {note.imageUrl ? (
         <div className="relative w-full h-40 mb-3 group/img shrink-0">
           <img
@@ -44,7 +43,11 @@ const NoteContent: React.FC<NoteContentProps> = ({ note, onUpdate }) => {
             className="w-full h-full object-cover rounded shadow-inner"
           />
           <button
-            onClick={() => onUpdate({ imageUrl: undefined })}
+            onClick={() => {
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              const { imageUrl, ...rest } = note;
+              onUpdate(rest);
+            }}
             className="absolute top-1 right-1 p-1 bg-black/40 text-white rounded-full opacity-0 group-hover/img:opacity-100 transition-opacity"
             aria-label="Remove image"
           >
@@ -57,7 +60,7 @@ const NoteContent: React.FC<NoteContentProps> = ({ note, onUpdate }) => {
         <textarea
           ref={textareaRef}
           value={tempText}
-          onChange={(e) => setTempText(e.target.value)}
+          onChange={e => setTempText(e.target.value)}
           onBlur={handleSave}
           className={`${NOTE_TEXT_CLASSES} flex-grow h-full`}
           placeholder="Write something..."
@@ -67,7 +70,11 @@ const NoteContent: React.FC<NoteContentProps> = ({ note, onUpdate }) => {
           onClick={() => setIsEditing(true)}
           className={`${NOTE_TEXT_CLASSES} flex-grow whitespace-pre-wrap cursor-text overflow-hidden`}
         >
-          {note.text || <span className="opacity-30 font-normal italic text-sm">Tap to edit...</span>}
+          {note.text || (
+            <span className="opacity-30 font-normal italic text-sm">
+              Tap to edit...
+            </span>
+          )}
         </div>
       )}
 
