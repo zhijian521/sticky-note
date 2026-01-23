@@ -137,9 +137,6 @@ export function useViewport() {
             resetZoom();
             break;
         }
-      } else if (e.key === ' ') {
-        e.preventDefault();
-        resetZoom();
       }
     };
 

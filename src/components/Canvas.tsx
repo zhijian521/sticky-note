@@ -14,11 +14,10 @@ interface CanvasProps {
   children: ReactNode;
   className?: string;
   onViewportChange: (updates: Partial<ViewportState>) => void;
-  onWheel: (e: WheelEvent, element: HTMLDivElement) => void;
 }
 
 const Canvas = forwardRef<HTMLDivElement, CanvasProps>(
-  ({ viewport, children, className = '', onViewportChange, onWheel }, ref) => {
+  ({ viewport, children, className = '', onViewportChange }, ref) => {
     const internalRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState<Position>({ x: 0, y: 0 });
@@ -77,34 +76,21 @@ const Canvas = forwardRef<HTMLDivElement, CanvasProps>(
       }
     }, [isDragging]);
 
-    // Handle wheel events
-    const handleWheel = useCallback(
-      (e: WheelEvent) => {
-        const element = internalRef.current;
-        if (element) {
-          onWheel(e, element);
-        }
-      },
-      [onWheel]
-    );
-
     // Set up event listeners
     useEffect(() => {
       const element = internalRef.current;
       if (!element) return;
 
-      element.addEventListener('wheel', handleWheel, { passive: false });
       element.addEventListener('mousedown', handleMouseDown);
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
 
       return () => {
-        element.removeEventListener('wheel', handleWheel);
         element.removeEventListener('mousedown', handleMouseDown);
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
       };
-    }, [handleWheel, handleMouseDown, handleMouseMove, handleMouseUp]);
+    }, [handleMouseDown, handleMouseMove, handleMouseUp]);
 
     const transform = `translate(${viewport.position.x}px, ${viewport.position.y}px) scale(${viewport.scale})`;
     const cursor = isDragging

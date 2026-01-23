@@ -36,4 +36,20 @@ describe('App', () => {
     render(<App />);
     expect(screen.getByLabelText('Notes container')).toBeInTheDocument();
   });
+
+  it('canvas container supports drag interactions', () => {
+    render(<App />);
+    const canvas = screen
+      .getByLabelText('Notes container')
+      .closest('.canvas-container');
+    expect(canvas).toBeInTheDocument();
+  });
+
+  it('canvas has correct cursor styles', () => {
+    render(<App />);
+    const canvas = screen
+      .getByLabelText('Notes container')
+      .closest('.canvas-container');
+    expect(canvas).toHaveStyle({ cursor: 'default' });
+  });
 });

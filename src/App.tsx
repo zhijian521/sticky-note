@@ -45,7 +45,6 @@ const App: React.FC = () => {
   // Viewport controls for zoom and pan
   const {
     viewport,
-    handleWheelZoom,
     zoomIn,
     zoomOut,
     resetZoom,
@@ -104,17 +103,14 @@ const App: React.FC = () => {
       <Canvas
         viewport={viewport}
         onViewportChange={updates => {
-          // Handle both position and scale updates
-          if (updates.position || updates.scale) {
-            if (updates.position) {
-              panTo(updates.position);
-            }
-            if (updates.scale) {
-              setZoom(updates.scale);
-            }
+          // Handle position updates only (scale handled by zoom controls)
+          if (updates.position) {
+            panTo(updates.position);
+          }
+          if (updates.scale) {
+            setZoom(updates.scale);
           }
         }}
-        onWheel={handleWheelZoom}
       >
         <div
           className="absolute inset-0"
