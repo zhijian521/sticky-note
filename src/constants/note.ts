@@ -17,7 +17,3 @@ export const PUCK_COLORS = {
   sky: '#d2ebff',
   tan: '#f0e6d2'
 } as const;
-
-export const AI_SETTINGS = {
-  MODEL: 'gemini-2.5-flash-image'
-} as const;

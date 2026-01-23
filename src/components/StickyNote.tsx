@@ -1,8 +1,6 @@
 import React, { useState, useCallback, useEffect, memo } from 'react';
-import { motion, useMotionValue, useSpring, PanInfo } from 'framer-motion';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { Note } from '../types';
-import { geminiService } from '../services/geminiService';
-import { soundService } from '../services/soundService';
 import { COLOR_MAP } from '../types';
 import { Z_INDEX, NOTE_DIMENSIONS } from '../constants/app';
 
@@ -10,7 +8,6 @@ import NotePin from './note/NotePin';
 import NoteToolbar from './note/NoteToolbar';
 import NoteResizeHandle from './note/NoteResizeHandle';
 import DragHandle from './note/DragHandle';
-import AiEditPanel from './note/AiEditPanel';
 import StylePanel from './note/StylePanel';
 import NoteContent from './note/NoteContent';
 
@@ -24,8 +21,6 @@ interface StickyNoteProps {
 
 const StickyNote: React.FC<StickyNoteProps> = memo(({ note, onUpdate, onDelete, onFocus, zIndex }) => {
   const [isStyling, setIsStyling] = useState(false);
-  const [isAiMode, setIsAiMode] = useState(false);
-  const [aiPrompt, setAiPrompt] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
 
@@ -85,30 +80,12 @@ const StickyNote: React.FC<StickyNoteProps> = memo(({ note, onUpdate, onDelete, 
     window.addEventListener('mouseup', onUp);
   }, [note.id, note.width, note.height, onUpdate]);
 
-  const handleAiEdit = useCallback(async () => {
-    if (!note.imageUrl || !aiPrompt) return;
-
-    onUpdate(note.id, { isProcessing: true });
-    setIsAiMode(false);
-
-    try {
-      const newImage = await geminiService.editImage(note.imageUrl, aiPrompt);
-      onUpdate(note.id, { imageUrl: newImage, isProcessing: false });
-      setAiPrompt('');
-    } catch (error) {
-      console.error('AI Edit failed:', error);
-      const errorMessage = error instanceof Error ? error.message : 'AI editing failed. Please try again.';
-      alert(errorMessage);
-      onUpdate(note.id, { isProcessing: false });
-    }
-  }, [note.id, note.imageUrl, aiPrompt, onUpdate]);
-
   const handleColorSelect = useCallback((color: typeof note.color) => {
     onUpdate(note.id, { color });
     setIsStyling(false);
   }, [note.id, onUpdate]);
 
-  const canDrag = !isStyling && !isResizing && !isAiMode;
+  const canDrag = !isStyling && !isResizing;
 
   return (
     <motion.div
@@ -142,26 +119,12 @@ const StickyNote: React.FC<StickyNoteProps> = memo(({ note, onUpdate, onDelete, 
       <NoteResizeHandle onResizeStart={handleResizeStart} />
 
       <NoteToolbar
-        hasImage={!!note.imageUrl}
-        isAiMode={isAiMode}
-        onToggleAi={() => setIsAiMode(!isAiMode)}
         isStyling={isStyling}
         onToggleStyling={() => setIsStyling(!isStyling)}
-        onDelete={() => {
-          soundService.playRip();
-          onDelete(note.id);
-        }}
+        onDelete={() => onDelete(note.id)}
       />
 
       <NoteContent note={note} onUpdate={(updates) => onUpdate(note.id, updates)} />
-
-      <AiEditPanel
-        isOpen={isAiMode}
-        prompt={aiPrompt}
-        onPromptChange={setAiPrompt}
-        onApply={handleAiEdit}
-        onClose={() => setIsAiMode(false)}
-      />
 
       <StylePanel
         isOpen={isStyling}

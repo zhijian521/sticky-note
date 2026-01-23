@@ -32,7 +32,6 @@ export interface Note {
   height: number;
   createdAt: number;
   lastFocusedAt: number;
-  isProcessing?: boolean;
 }
 
 export const COLOR_MAP: Record<NoteColor, string> = {

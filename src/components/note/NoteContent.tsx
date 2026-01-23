@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Loader2 } from 'lucide-react';
+import { X } from 'lucide-react';
 import { Note } from '../../types';
 import { NOTE_TEXT_CLASSES } from '../../constants/note';
 import { Z_INDEX } from '../../constants/app';
@@ -36,13 +36,6 @@ const NoteContent: React.FC<NoteContentProps> = ({ note, onUpdate }) => {
 
   return (
     <div className="relative flex-grow flex flex-col overflow-hidden" style={{ zIndex: Z_INDEX.NOTE_CONTENT }}>
-      {note.isProcessing && (
-        <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-50 flex flex-col items-center justify-center gap-2 rounded">
-          <Loader2 className="animate-spin text-indigo-600" />
-          <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">AI Working...</span>
-        </div>
-      )}
-
       {note.imageUrl ? (
         <div className="relative w-full h-40 mb-3 group/img shrink-0">
           <img
