@@ -1,4 +1,4 @@
-export const NOTE_TEXT_CLASSES = "w-full text-lg font-medium leading-snug tracking-tight text-gray-800 p-0 m-0 bg-transparent border-none focus:outline-none resize-none overflow-hidden";
+export const NOTE_TEXT_CLASSES = "w-full text-lg font-normal leading-snug tracking-tight text-gray-800 p-0 m-0 bg-transparent border-none focus:outline-none resize-none overflow-hidden";
 
 export const PUCK_COLORS = {
   yellow: '#f9f4b0',

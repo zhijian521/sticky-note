@@ -72,7 +72,7 @@ const NoteContent: React.FC<NoteContentProps> = ({ note, onUpdate }) => {
       )}
 
       <div className="flex items-center justify-between mt-2 pt-2 border-t border-black/5 shrink-0">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-black/20">
+        <span className="text-[10px] font-normal uppercase tracking-wider text-black/20">
           {formatDate(note.createdAt)}
         </span>
       </div>
