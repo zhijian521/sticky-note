@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo, useRef, RefObject } from 'react';
 import { Plus, Command } from 'lucide-react';
 import { Note, WallType, COLOR_MAP } from './types';
 import StickyNote from './components/StickyNote';
+import ZoomControls from './components/ZoomControls';
+import Canvas from './components/Canvas';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { COLORS, WALLS, Z_INDEX } from './constants/app';
@@ -9,6 +11,7 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 import { useNoteOperations } from './hooks/useNoteOperations';
 import { useWallStyle } from './hooks/useWallStyle';
 import { useClickOutside } from './hooks/useClickOutside';
+import { useViewport } from './hooks/useViewport';
 
 const TUTORIAL_NOTE_TEXT =
   '欢迎使用 WallNotes！\n\n这是一块模拟真实物理质感的空间：\n\n• 拖拽便签即可移动位置\n• 拖动右下角图标调整大小\n• 点击便签文字开始编辑\n• 下方工具栏可创建新便签及更换墙壁皮肤\n\n尽情发挥你的创意吧！';
@@ -38,6 +41,17 @@ const App: React.FC = () => {
 
   useWallStyle(wallType);
   const { createNote } = useNoteOperations();
+
+  // Viewport controls for zoom and pan
+  const {
+    viewport,
+    setupCanvas,
+    zoomIn,
+    zoomOut,
+    resetZoom,
+    MIN_SCALE,
+    MAX_SCALE,
+  } = useViewport();
 
   // Initialize with tutorial note if no notes exist
   useEffect(() => {
@@ -84,25 +98,39 @@ const App: React.FC = () => {
       role="application"
       aria-label="Sticky Notes Wall"
     >
-      <div
-        className="absolute inset-0"
-        style={{ zIndex: Z_INDEX.BASE }}
-        aria-label="Notes container"
-      >
-        <AnimatePresence>
-          {sortedNotes.map((note, index) => (
-            <StickyNote
-              key={note.id}
-              note={note}
-              onUpdate={updateNote}
-              onDelete={deleteNote}
-              onFocus={focusNote}
-              zIndex={index + Z_INDEX.BASE}
-            />
-          ))}
-        </AnimatePresence>
-      </div>
+      {/* Canvas for zoom and pan */}
+      <Canvas viewport={viewport} setupCanvas={setupCanvas}>
+        <div
+          className="absolute inset-0"
+          style={{ zIndex: Z_INDEX.BASE }}
+          aria-label="Notes container"
+        >
+          <AnimatePresence>
+            {sortedNotes.map((note, index) => (
+              <StickyNote
+                key={note.id}
+                note={note}
+                onUpdate={updateNote}
+                onDelete={deleteNote}
+                onFocus={focusNote}
+                zIndex={index + Z_INDEX.BASE}
+              />
+            ))}
+          </AnimatePresence>
+        </div>
+      </Canvas>
 
+      {/* Zoom controls */}
+      <ZoomControls
+        scale={viewport.scale}
+        onZoomIn={zoomIn}
+        onZoomOut={zoomOut}
+        onReset={resetZoom}
+        minScale={MIN_SCALE}
+        maxScale={MAX_SCALE}
+      />
+
+      {/* Bottom dock */}
       <div
         className="fixed bottom-10 left-1/2 -translate-x-1/2"
         style={{ zIndex: Z_INDEX.DOCK }}

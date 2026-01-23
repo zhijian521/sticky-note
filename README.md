@@ -2,19 +2,115 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Run and deploy your AI Studio app
+# WallNotes - 现代化便签画板
 
-This contains everything you need to run your app locally.
+一个功能丰富的现代化便签应用，支持画板缩放、拖拽和多设备交互。
 
-View your app in AI Studio: https://ai.studio/apps/drive/1ECr55Ovf7-d9DmvJ5U0_ZpJX1J5n81tN
+## ✨ 主要特性
 
-## Run Locally
+### 📝 核心功能
 
-**Prerequisites:**  Node.js
+- **便签管理** - 创建、编辑、删除便签
+- **多彩便签** - 15种颜色选择
+- **墙壁背景** - 5种不同的墙壁样式
+- **图片支持** - 便签中插入图片
 
+### 🔍 画板功能
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- **缩放控制** - 支持 0.25x 到 3x 缩放
+- **拖拽平移** - 鼠标拖拽移动画板
+- **鼠标滚轮缩放** - 智能跟随鼠标位置缩放
+- **一键重置** - 快速回到默认视图
+
+### ⌨️ 快捷键支持
+
+- `Ctrl/Cmd + +` - 放大
+- `Ctrl/Cmd + -` - 缩小
+- `Ctrl/Cmd + 0` - 重置视图
+- `空格键` - 重置视图
+
+### 📱 触屏支持
+
+- **单指拖拽** - 移动画板
+- **双指缩放** - 捏合缩放手势
+- **触屏优化** - 流畅的触摸体验
+
+### 🎨 视觉效果
+
+- **流畅动画** - 缩放和平移动画效果
+- **现代UI** - 清晰的界面设计
+- **响应式** - 适配不同屏幕尺寸
+
+## 🚀 快速开始
+
+**前置条件:** Node.js
+
+1. 安装依赖:
+
+   ```bash
+   npm install
+   ```
+
+2. 启动开发服务器:
+
+   ```bash
+   npm run dev
+   ```
+
+3. 构建生产版本:
+   ```bash
+   npm run build
+   ```
+
+## 🛠️ 开发
+
+### 可用脚本
+
+- `npm run dev` - 启动开发服务器
+- `npm run build` - 构建生产版本
+- `npm run preview` - 预览构建结果
+- `npm run lint` - 代码检查
+- `npm run lint:fix` - 自动修复代码问题
+- `npm run format` - 代码格式化
+- `npm run typecheck` - TypeScript 类型检查
+- `npm run test` - 运行测试
+- `npm run test:ui` - 测试可视化界面
+
+### 技术栈
+
+- **React 19** - 最新版本React
+- **TypeScript** - 类型安全
+- **Vite** - 快速构建工具
+- **Framer Motion** - 动画库
+- **Zustand** - 状态管理
+- **Vitest** - 测试框架
+
+## 📖 使用说明
+
+### 基本操作
+
+1. 点击下方颜色按钮创建对应颜色的便签
+2. 点击 "New Note" 创建随机颜色便签
+3. 点击便签文字开始编辑
+4. 拖拽便签右下角调整大小
+5. 拖拽便签标题栏移动位置
+
+### 画板操作
+
+1. 使用右上角缩放控制按钮
+2. 鼠标滚轮缩放画板
+3. 点击并拖拽空白区域平移画板
+4. 使用键盘快捷键快速操作
+
+## 🎯 最佳实践
+
+这个项目遵循了2024年前端开发的最佳实践：
+
+- ✅ 严格TypeScript配置
+- ✅ 现代React Hooks使用
+- ✅ 组件化架构
+- ✅ 状态管理优化
+- ✅ 性能优化
+- ✅ 无障碍支持
+- ✅ 测试覆盖
+- ✅ 代码质量控制
