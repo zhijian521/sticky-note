@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { ViewportState, Position } from '../types';
 
 const MIN_SCALE = 0.25;
@@ -24,14 +24,6 @@ export function useViewport() {
     }
     return { scale: RESET_SCALE, position: { x: 0, y: 0 } };
   });
-
-  const isDraggingRef = useRef(false);
-  const dragStartRef = useRef<Position>({ x: 0, y: 0 });
-  const lastPositionRef = useRef<Position>({ x: 0, y: 0 });
-  const canvasRef = useRef<HTMLDivElement>(null);
-  const lastTouchRef = useRef<{ x: number; y: number; time: number } | null>(
-    null
-  );
 
   // Save viewport state to localStorage
   useEffect(() => {
@@ -93,9 +85,9 @@ export function useViewport() {
     }));
   }, []);
 
-  // Mouse wheel zoom
-  const handleWheel = useCallback(
-    (e: WheelEvent) => {
+  // Mouse wheel zoom at cursor position
+  const handleWheelZoom = useCallback(
+    (e: WheelEvent, element: HTMLDivElement) => {
       e.preventDefault();
 
       const delta = e.deltaY > 0 ? -SCALE_STEP : SCALE_STEP;
@@ -105,198 +97,24 @@ export function useViewport() {
       );
 
       if (newScale !== viewport.scale) {
-        // Calculate mouse position relative to container
-        const container = canvasRef.current;
-        if (container) {
-          const rect = container.getBoundingClientRect();
-          const mouseX = e.clientX - rect.left;
-          const mouseY = e.clientY - rect.top;
+        const rect = element.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
 
-          // Calculate new position to zoom towards mouse position
-          const scaleChange = newScale - viewport.scale;
-          const newX =
-            viewport.position.x - (mouseX * scaleChange) / viewport.scale;
-          const newY =
-            viewport.position.y - (mouseY * scaleChange) / viewport.scale;
+        // Calculate new position to zoom towards mouse position
+        const scaleChange = newScale - viewport.scale;
+        const newX =
+          viewport.position.x - (mouseX * scaleChange) / viewport.scale;
+        const newY =
+          viewport.position.y - (mouseY * scaleChange) / viewport.scale;
 
-          updateViewport({
-            scale: newScale,
-            position: { x: newX, y: newY },
-          });
-        } else {
-          updateViewport({ scale: newScale });
-        }
+        updateViewport({
+          scale: newScale,
+          position: { x: newX, y: newY },
+        });
       }
     },
     [viewport, updateViewport]
-  );
-
-  // Mouse drag to pan
-  const handleMouseDown = useCallback(
-    (e: MouseEvent) => {
-      // Only start dragging if clicking on canvas directly (not on notes)
-      const target = e.target as HTMLElement;
-      if (target === canvasRef.current || target.closest('.canvas-container')) {
-        isDraggingRef.current = true;
-        dragStartRef.current = { x: e.clientX, y: e.clientY };
-        lastPositionRef.current = viewport.position;
-        e.preventDefault();
-      }
-    },
-    [viewport.position]
-  );
-
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (isDraggingRef.current) {
-      const deltaX = e.clientX - dragStartRef.current.x;
-      const deltaY = e.clientY - dragStartRef.current.y;
-
-      const newPosition = {
-        x: lastPositionRef.current.x + deltaX,
-        y: lastPositionRef.current.y + deltaY,
-      };
-
-      setViewport(prev => ({ ...prev, position: newPosition }));
-    }
-  }, []);
-
-  const handleMouseUp = useCallback(() => {
-    isDraggingRef.current = false;
-  }, []);
-
-  // Touch event handlers
-  const handleTouchStart = useCallback((e: TouchEvent) => {
-    if (e.touches.length === 1) {
-      const touch = e.touches[0];
-      if (touch) {
-        lastTouchRef.current = {
-          x: touch.clientX,
-          y: touch.clientY,
-          time: Date.now(),
-        };
-      }
-    } else if (e.touches.length === 2) {
-      // Pinch to zoom
-      e.preventDefault();
-      const touch1 = e.touches[0];
-      const touch2 = e.touches[1];
-      if (touch1 && touch2) {
-        const distance = Math.hypot(
-          touch2.clientX - touch1.clientX,
-          touch2.clientY - touch1.clientY
-        );
-        lastTouchRef.current = { x: distance, y: 0, time: Date.now() };
-      }
-    }
-  }, []);
-
-  const handleTouchMove = useCallback(
-    (e: TouchEvent) => {
-      e.preventDefault();
-
-      if (e.touches.length === 1 && lastTouchRef.current) {
-        // Pan with single finger
-        const touch = e.touches[0];
-        if (touch) {
-          const deltaX = touch.clientX - lastTouchRef.current.x;
-          const deltaY = touch.clientY - lastTouchRef.current.y;
-
-          setViewport(prev => ({
-            ...prev,
-            position: {
-              x: prev.position.x + deltaX,
-              y: prev.position.y + deltaY,
-            },
-          }));
-
-          lastTouchRef.current.x = touch.clientX;
-          lastTouchRef.current.y = touch.clientY;
-        }
-      } else if (e.touches.length === 2 && lastTouchRef.current) {
-        // Pinch to zoom
-        const touch1 = e.touches[0];
-        const touch2 = e.touches[1];
-        if (touch1 && touch2) {
-          const distance = Math.hypot(
-            touch2.clientX - touch1.clientX,
-            touch2.clientY - touch1.clientY
-          );
-
-          const scaleChange = distance / lastTouchRef.current.x;
-          const newScale = Math.max(
-            MIN_SCALE,
-            Math.min(MAX_SCALE, viewport.scale * scaleChange)
-          );
-
-          if (newScale !== viewport.scale) {
-            const centerX = (touch1.clientX + touch2.clientX) / 2;
-            const centerY = (touch1.clientY + touch2.clientY) / 2;
-
-            const scaleDiff = newScale - viewport.scale;
-            const newX =
-              viewport.position.x - (centerX * scaleDiff) / viewport.scale;
-            const newY =
-              viewport.position.y - (centerY * scaleDiff) / viewport.scale;
-
-            updateViewport({ scale: newScale, position: { x: newX, y: newY } });
-          }
-
-          lastTouchRef.current.x = distance;
-        }
-      }
-    },
-    [viewport, updateViewport]
-  );
-
-  const handleTouchEnd = useCallback(() => {
-    lastTouchRef.current = null;
-  }, []);
-
-  // Set up event listeners for canvas element
-  const setupCanvas = useCallback(
-    (element: HTMLDivElement | null) => {
-      canvasRef.current = element;
-      if (!element) return;
-
-      // Mouse events
-      element.addEventListener('wheel', handleWheel, { passive: false });
-      element.addEventListener('mousedown', handleMouseDown);
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-
-      // Touch events
-      element.addEventListener('touchstart', handleTouchStart, {
-        passive: false,
-      });
-      element.addEventListener('touchmove', handleTouchMove, {
-        passive: false,
-      });
-      element.addEventListener('touchend', handleTouchEnd);
-      element.addEventListener('touchcancel', handleTouchEnd);
-
-      return () => {
-        // Mouse events
-        element.removeEventListener('wheel', handleWheel);
-        element.removeEventListener('mousedown', handleMouseDown);
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
-
-        // Touch events
-        element.removeEventListener('touchstart', handleTouchStart);
-        element.removeEventListener('touchmove', handleTouchMove);
-        element.removeEventListener('touchend', handleTouchEnd);
-        element.removeEventListener('touchcancel', handleTouchEnd);
-      };
-    },
-    [
-      handleWheel,
-      handleMouseDown,
-      handleMouseMove,
-      handleMouseUp,
-      handleTouchStart,
-      handleTouchMove,
-      handleTouchEnd,
-    ]
   );
 
   // Set up keyboard shortcuts
@@ -319,7 +137,7 @@ export function useViewport() {
             resetZoom();
             break;
         }
-      } else if (e.key === ' ' && e.target === document.body) {
+      } else if (e.key === ' ') {
         e.preventDefault();
         resetZoom();
       }
@@ -331,7 +149,7 @@ export function useViewport() {
 
   return {
     viewport,
-    setupCanvas,
+    handleWheelZoom,
     zoomIn,
     zoomOut,
     resetZoom,

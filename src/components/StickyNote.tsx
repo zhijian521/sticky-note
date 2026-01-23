@@ -122,6 +122,7 @@ const StickyNote: React.FC<StickyNoteProps> = memo(
           backgroundColor: COLOR_MAP[note.color],
         }}
         className={`note-container p-6 pt-10 flex flex-col group ${isDragging ? 'note-dragging' : ''}`}
+        data-note-id={note.id}
       >
         {canDrag && (
           <DragHandle

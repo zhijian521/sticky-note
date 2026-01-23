@@ -45,10 +45,12 @@ const App: React.FC = () => {
   // Viewport controls for zoom and pan
   const {
     viewport,
-    setupCanvas,
+    handleWheelZoom,
     zoomIn,
     zoomOut,
     resetZoom,
+    setZoom,
+    panTo,
     MIN_SCALE,
     MAX_SCALE,
   } = useViewport();
@@ -99,7 +101,21 @@ const App: React.FC = () => {
       aria-label="Sticky Notes Wall"
     >
       {/* Canvas for zoom and pan */}
-      <Canvas viewport={viewport} setupCanvas={setupCanvas}>
+      <Canvas
+        viewport={viewport}
+        onViewportChange={updates => {
+          // Handle both position and scale updates
+          if (updates.position || updates.scale) {
+            if (updates.position) {
+              panTo(updates.position);
+            }
+            if (updates.scale) {
+              setZoom(updates.scale);
+            }
+          }
+        }}
+        onWheel={handleWheelZoom}
+      >
         <div
           className="absolute inset-0"
           style={{ zIndex: Z_INDEX.BASE }}
