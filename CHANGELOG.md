@@ -1,4 +1,12 @@
-# 画板交互优化更新
+# WallNotes 画板交互优化更新
+
+## 🎯 最新更新 - 屏幕中心缩放优化
+
+### ✨ 新增功能
+
+- **屏幕中心缩放** - 所有缩放操作都以屏幕中心为基准
+- **统一缩放行为** - 按钮、键盘、滚轮都使用相同缩放逻辑
+- **更一致的用户体验** - 无论从哪里触发缩放都表现一致
 
 ## 🎯 更新内容
 
@@ -10,17 +18,17 @@
 ### ✅ 保留的功能
 
 - **键盘快捷键缩放** - Ctrl/Cmd + (+/-/0) 缩放控制
-- **UI按钮缩放** - 右上角缩放控制面板
-- **画板拖拽** - 点击并拖拽空白区域移动画板
+- **UI按钮缩放** - dock中缩放控制面板
+- **画板拖拽** - 点击空白区域拖拽移动画板
 - **状态持久化** - 视图状态自动保存
 
-### 🎨 用户体验优化
+### 🎨 用户体验改进
 
 #### 🖱️ 鼠标交互
 
-- **原生滚动** - 鼠标滚轮保持页面默认滚动行为
-- **智能拖拽** - 只在点击空白区域时启动拖拽
-- **精确控制** - 通过UI按钮和键盘快捷键精确控制缩放
+- **原生滚轮行为** - 滚轮现在按预期滚动页面
+- **减少误操作** - 避免意外的缩放干扰
+- **精确控制** - 缩放功能集中在专用UI元素
 
 #### ⌨️ 键盘控制
 
@@ -40,45 +48,63 @@ Ctrl / Cmd +
   0; // 重置视图
 ```
 
-#### 📱 触屏支持（计划中）
+#### 🎯 屏幕中心缩放
 
-- **单指拖拽** - 在触屏设备上拖拽画板
-- **双指缩放** - 捏合手势控制缩放
-- **手势优化** - 流畅自然的触屏交互
+- **一致性** - 所有缩放都以屏幕中心为基准
+- **预测性** - 用户可以预测缩放后的视图位置
+- **专业感** - 类似专业设计软件的行为
 
 ## 🛠️ 技术实现
+
+### 核心逻辑重构
+
+#### 缩放计算函数
+
+```typescript
+const calculateCenterZoom = useCallback(
+  (newScale: number) => {
+    // 获取画布容器
+    const canvasElement = document.querySelector(
+      '.canvas-container'
+    ) as HTMLDivElement;
+    if (!canvasElement) return { scale: newScale };
+
+    const rect = canvasElement.getBoundingClientRect();
+    // 计算屏幕中心相对于画布的位置
+    const centerX = window.innerWidth / 2 - rect.left;
+    const centerY = window.innerHeight / 2 - rect.top;
+
+    // 计算新的位置以使缩放以屏幕中心为基准
+    const scaleChange = newScale - viewport.scale;
+    const newX = viewport.position.x - (centerX * scaleChange) / viewport.scale;
+    const newY = viewport.position.y - (centerY * scaleChange) / viewport.scale;
+
+    return {
+      scale: newScale,
+      position: { x: newX, y: newY },
+    };
+  },
+  [viewport]
+);
+```
+
+#### 统一缩放接口
+
+- `zoomIn()` - 以屏幕中心放大
+- `zoomOut()` - 以屏幕中心缩小
+- `handleWheelZoom()` - 以屏幕中心滚轮缩放
+- `setZoom(scale)` - 设置到指定缩放级别
 
 ### 代码结构变更
 
 ```
 src/
 ├── components/
-│   ├── Canvas.tsx          # 移除滚轮事件监听
-│   └── ZoomControls.tsx     # 保持现有UI控制
+│   ├── Canvas.tsx          # 移除滚轮事件监听，保持拖拽
+│   └── ZoomControls.tsx     # 移除（已集成到dock）
 ├── hooks/
-│   └── useViewport.ts       # 移除空格键监听
-└── test/
-    └── App.test.tsx        # 更新测试用例
-```
-
-### 核心逻辑修改
-
-#### Canvas.tsx
-
-```typescript
-// 移除滚轮事件处理
-// 拖拽检测保持不变
-onMouseDown: 只在空白区域启动拖拽;
-onMouseMove: 处理拖拽移动;
-onMouseUp: 结束拖拽状态;
-```
-
-#### useViewport.ts
-
-```typescript
-// 移除滚轮缩放逻辑
-handleWheelZoom: 函数保留但不在Canvas中调用;
-handleKeyDown: 移除空格键处理;
+│   └── useViewport.ts       # 重构缩放逻辑，添加屏幕中心计算
+└── App.tsx                  # 更新Canvas调用，集成缩放控制
 ```
 
 ## 📊 用户体验改进
@@ -88,6 +114,7 @@ handleKeyDown: 移除空格键处理;
 - **预期行为** - 用户滚轮时滚动页面而非缩放画板
 - **无干扰** - 滚轮不会意外改变用户正在查看的内容
 - **精确控制** - 缩放功能集中在专用控制元素
+- **屏幕中心** - 缩放始终以可视区域中心为基准
 
 ### 📱 跨设备适配
 
@@ -102,6 +129,7 @@ handleKeyDown: 移除空格键处理;
 - 拖拽交互验证
 - 鼠标样式状态测试
 - Canvas元素结构验证
+- 缩放控制按钮验证
 
 ### 质量检查
 
@@ -114,9 +142,10 @@ handleKeyDown: 移除空格键处理;
 
 ### 缩放控制
 
-1. **右上角按钮** - 点击 + / - / 重置按钮
+1. **dock按钮** - 点击dock中的 + / - / 重置按钮
 2. **键盘快捷键** - Ctrl/Cmd + +/-/0
-3. **避免误操作** - 滚轮不会意外触发缩放
+3. **屏幕中心缩放** - 所有缩放都以屏幕中心为基准
+4. **避免误操作** - 滚轮不会意外触发缩放
 
 ### 拖拽操作
 
@@ -124,4 +153,4 @@ handleKeyDown: 移除空格键处理;
 2. **平滑移动** - 画板跟随鼠标移动
 3. **自动停止** - 松开鼠标停止拖拽
 
-这次优化专注于提供更直观、更少误操作的画板交互体验。
+这次优化专注于提供更直观、更少误操作的画板交互体验，并实现了专业的屏幕中心缩放行为。

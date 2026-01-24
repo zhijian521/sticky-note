@@ -47,14 +47,50 @@ export function useViewport() {
     });
   }, []);
 
+  // Helper function to calculate zoom towards screen center
+  const calculateCenterZoom = useCallback(
+    (newScale: number) => {
+      // Get canvas element to calculate center point
+      const canvasElement = document.querySelector(
+        '.canvas-container'
+      ) as HTMLDivElement;
+      if (!canvasElement) return { scale: newScale };
+
+      const rect = canvasElement.getBoundingClientRect();
+      const centerX = window.innerWidth / 2 - rect.left;
+      const centerY = window.innerHeight / 2 - rect.top;
+
+      // Calculate new position to zoom towards screen center
+      const scaleChange = newScale - viewport.scale;
+      const newX =
+        viewport.position.x - (centerX * scaleChange) / viewport.scale;
+      const newY =
+        viewport.position.y - (centerY * scaleChange) / viewport.scale;
+
+      return {
+        scale: newScale,
+        position: { x: newX, y: newY },
+      };
+    },
+    [viewport]
+  );
+
   // Zoom functions
   const zoomIn = useCallback(() => {
-    updateViewport({ scale: viewport.scale + SCALE_STEP });
-  }, [viewport.scale, updateViewport]);
+    const newScale = Math.max(
+      MIN_SCALE,
+      Math.min(MAX_SCALE, viewport.scale + SCALE_STEP)
+    );
+    updateViewport(calculateCenterZoom(newScale));
+  }, [viewport.scale, calculateCenterZoom, updateViewport]);
 
   const zoomOut = useCallback(() => {
-    updateViewport({ scale: viewport.scale - SCALE_STEP });
-  }, [viewport.scale, updateViewport]);
+    const newScale = Math.max(
+      MIN_SCALE,
+      Math.min(MAX_SCALE, viewport.scale - SCALE_STEP)
+    );
+    updateViewport(calculateCenterZoom(newScale));
+  }, [viewport.scale, calculateCenterZoom, updateViewport]);
 
   const resetZoom = useCallback(() => {
     updateViewport({ scale: RESET_SCALE, position: { x: 0, y: 0 } });
@@ -62,9 +98,10 @@ export function useViewport() {
 
   const setZoom = useCallback(
     (scale: number) => {
-      updateViewport({ scale });
+      const clampedScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
+      updateViewport(calculateCenterZoom(clampedScale));
     },
-    [updateViewport]
+    [calculateCenterZoom, updateViewport]
   );
 
   // Pan functions
@@ -84,38 +121,6 @@ export function useViewport() {
       },
     }));
   }, []);
-
-  // Mouse wheel zoom at cursor position
-  const handleWheelZoom = useCallback(
-    (e: WheelEvent, element: HTMLDivElement) => {
-      e.preventDefault();
-
-      const delta = e.deltaY > 0 ? -SCALE_STEP : SCALE_STEP;
-      const newScale = Math.max(
-        MIN_SCALE,
-        Math.min(MAX_SCALE, viewport.scale + delta)
-      );
-
-      if (newScale !== viewport.scale) {
-        const rect = element.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-
-        // Calculate new position to zoom towards mouse position
-        const scaleChange = newScale - viewport.scale;
-        const newX =
-          viewport.position.x - (mouseX * scaleChange) / viewport.scale;
-        const newY =
-          viewport.position.y - (mouseY * scaleChange) / viewport.scale;
-
-        updateViewport({
-          scale: newScale,
-          position: { x: newX, y: newY },
-        });
-      }
-    },
-    [viewport, updateViewport]
-  );
 
   // Set up keyboard shortcuts
   useEffect(() => {
@@ -146,7 +151,6 @@ export function useViewport() {
 
   return {
     viewport,
-    handleWheelZoom,
     zoomIn,
     zoomOut,
     resetZoom,
