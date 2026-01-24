@@ -20,14 +20,14 @@ describe('App', () => {
     expect(screen.getByText(/欢迎使用 WallNotes/i)).toBeInTheDocument();
   });
 
-  it('renders zoom controls', () => {
+  it('renders zoom controls in dock', () => {
     render(<App />);
     expect(screen.getByLabelText('放大')).toBeInTheDocument();
     expect(screen.getByLabelText('缩小')).toBeInTheDocument();
     expect(screen.getByLabelText('重置视图')).toBeInTheDocument();
   });
 
-  it('displays current zoom level', () => {
+  it('displays current zoom level in dock', () => {
     render(<App />);
     expect(screen.getByText('100%')).toBeInTheDocument();
   });

@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef, RefObject } from 'react';
-import { Plus, Command } from 'lucide-react';
+import { Plus, Command, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import { Note, WallType, COLOR_MAP } from './types';
 import StickyNote from './components/StickyNote';
-import ZoomControls from './components/ZoomControls';
 import Canvas from './components/Canvas';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -132,16 +131,6 @@ const App: React.FC = () => {
         </div>
       </Canvas>
 
-      {/* Zoom controls */}
-      <ZoomControls
-        scale={viewport.scale}
-        onZoomIn={zoomIn}
-        onZoomOut={zoomOut}
-        onReset={resetZoom}
-        minScale={MIN_SCALE}
-        maxScale={MAX_SCALE}
-      />
-
       {/* Bottom dock */}
       <div
         className="fixed bottom-10 left-1/2 -translate-x-1/2"
@@ -163,6 +152,50 @@ const App: React.FC = () => {
                 title={c}
               />
             ))}
+          </div>
+
+          {/* Zoom controls */}
+          <div className="flex gap-1 px-3 border-r border-black/5">
+            <button
+              onClick={zoomOut}
+              disabled={viewport.scale <= MIN_SCALE}
+              className={`p-2 rounded-xl transition-all ${
+                viewport.scale > MIN_SCALE
+                  ? 'hover:bg-gray-100 hover:scale-110 text-gray-700'
+                  : 'opacity-40 cursor-not-allowed text-gray-400'
+              }`}
+              title="缩小 (Ctrl + -)"
+              aria-label="缩小"
+            >
+              <ZoomOut size={16} />
+            </button>
+
+            <div className="flex items-center justify-center min-w-[40px] px-2 text-sm font-medium text-gray-700">
+              {Math.round(viewport.scale * 100)}%
+            </div>
+
+            <button
+              onClick={zoomIn}
+              disabled={viewport.scale >= MAX_SCALE}
+              className={`p-2 rounded-xl transition-all ${
+                viewport.scale < MAX_SCALE
+                  ? 'hover:bg-gray-100 hover:scale-110 text-gray-700'
+                  : 'opacity-40 cursor-not-allowed text-gray-400'
+              }`}
+              title="放大 (Ctrl + +)"
+              aria-label="放大"
+            >
+              <ZoomIn size={16} />
+            </button>
+
+            <button
+              onClick={resetZoom}
+              className="p-2 rounded-xl transition-all hover:bg-gray-100 hover:scale-110 text-gray-700 ml-1"
+              title="重置视图 (Ctrl + 0)"
+              aria-label="重置视图"
+            >
+              <RotateCcw size={16} />
+            </button>
           </div>
 
           <button
