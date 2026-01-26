@@ -17,8 +17,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['logo.png', 'apple-touch-icon.png'],
       manifest: {
-        name: 'WallNotes - Physical Workspace',
-        short_name: 'WallNotes',
+        name: 'Sticky Note - Physical Workspace',
+        short_name: 'Sticky Note',
         description:
           'Create and organize digital sticky notes with a realistic paper-like experience',
         theme_color: '#f5f5dc',
