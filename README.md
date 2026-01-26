@@ -2,7 +2,7 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# WallNotes - 现代化便签画板
+# Sticky Note - 现代化便签画板
 
 一个功能丰富的现代化便签应用，支持画板缩放、拖拽和多设备交互。
 
