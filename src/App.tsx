@@ -6,6 +6,7 @@ import Canvas from './components/Canvas';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { COLORS, WALLS, Z_INDEX } from './constants/app';
+import { InstallPrompt } from './components/pwa';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useNoteOperations } from './hooks/useNoteOperations';
 import { useWallStyle } from './hooks/useWallStyle';
@@ -245,6 +246,9 @@ const App: React.FC = () => {
           </div>
         </motion.div>
       </div>
+
+      {/* PWA Install Prompt */}
+      <InstallPrompt />
     </div>
   );
 };
