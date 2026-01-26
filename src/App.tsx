@@ -14,7 +14,7 @@ import { useClickOutside } from './hooks/useClickOutside';
 import { useViewport } from './hooks/useViewport';
 
 const TUTORIAL_NOTE_TEXT =
-  '欢迎使用 WallNotes！\n\n这是一块模拟真实物理质感的空间：\n\n• 拖拽便签即可移动位置\n• 拖动右下角图标调整大小\n• 点击便签文字开始编辑\n• 下方工具栏可创建新便签及更换墙壁皮肤\n\n尽情发挥你的创意吧！';
+  '欢迎使用 Sticky Note！\n\n这是一块模拟真实物理质感的空间：\n\n• 拖拽便签即可移动位置\n• 拖动右下角图标调整大小\n• 点击便签文字开始编辑\n• 下方工具栏可创建新便签及更换墙壁皮肤\n\n尽情发挥你的创意吧！';
 
 const App: React.FC = () => {
   const [notes, setNotes, isNotesLoaded] = useLocalStorage<Note[]>(

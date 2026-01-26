@@ -109,7 +109,7 @@ export const InstallPrompt = () => {
 
           <div className="flex-1">
             <h3 className="font-semibold text-gray-900 mb-1">
-              Install WallNotes
+              Install Sticky Note
             </h3>
             <p className="text-sm text-gray-600 mb-4">
               Install the app for a better experience with offline support and

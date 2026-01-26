@@ -17,7 +17,7 @@ describe('App', () => {
 
   it('displays tutorial note on first load', () => {
     render(<App />);
-    expect(screen.getByText(/欢迎使用 WallNotes/i)).toBeInTheDocument();
+    expect(screen.getByText(/欢迎使用 Sticky Note/i)).toBeInTheDocument();
   });
 
   it('renders zoom controls in dock', () => {
