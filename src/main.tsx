@@ -3,6 +3,19 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import './index.css';
+import { registerSW } from 'virtual:pwa-register';
+
+// Register PWA service worker
+registerSW({
+  onNeedRefresh() {
+    if (confirm('New content available. Reload to update?')) {
+      location.reload();
+    }
+  },
+  onOfflineReady() {
+    console.log('PWA application is ready for offline use.');
+  },
+});
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
