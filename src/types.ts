@@ -15,7 +15,28 @@ export type NoteColor =
   | 'sky'
   | 'tan';
 
-export type WallType = 'minimal' | 'brick' | 'wood' | 'concrete' | 'studio';
+export type WallType =
+  // 办公看板系列
+  | 'whiteboard'
+  | 'cork'
+  | 'felt'
+  | 'magnetic'
+  // 砖石墙面系列
+  | 'brick-red'
+  | 'brick-white'
+  | 'concrete'
+  | 'plaster'
+  | 'sandstone'
+  // 木质系列
+  | 'wood-oak'
+  | 'wood-pine'
+  | 'wood-bamboo'
+  | 'wood-dark'
+  // 肌理材质系列
+  | 'linen'
+  | 'burlap'
+  | 'leather'
+  | 'canvas';
 
 export interface Position {
   x: number;
