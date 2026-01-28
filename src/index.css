@@ -1,83 +1,298 @@
 :root {
-    --glass-blur: 16px;
+  --glass-blur: 16px;
 }
 
 body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-    user-select: none;
-    background-color: #f3f4f6;
-    transition: background-color 0.5s ease;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  background-color: #f3f4f6;
+  transition: background-color 0.5s ease;
 }
 
-/* 真实物理墙面纹理 */
-.wall-minimal {
-    background-color: #f9fafb;
-    background-image: url('https://www.transparenttextures.com/patterns/asfalt-light.png');
+/* ============================================
+   真实墙壁与看板纹理 - 基于 transparenttextures.com
+   专为便签应用优化的真实材质背景
+   ============================================ */
+
+/*
+ * 使用 CSS 自定义属性定义背景配置
+ * 好处：
+ * 1. 统一管理颜色和纹理
+ * 2. 便于主题切换
+ * 3. 避免重复代码
+ */
+
+:root {
+  /* 办公看板系列 */
+  --wall-whiteboard-color: #fafafa;
+  --wall-whiteboard-image: url('https://www.transparenttextures.com/patterns/clean-gray-paper.png');
+
+  --wall-cork-color: #c9a66b;
+  --wall-cork-image: url('https://www.transparenttextures.com/patterns/cork-board.png');
+
+  --wall-felt-color: #7a7a7a;
+  --wall-felt-image: url('https://www.transparenttextures.com/patterns/felt.png');
+
+  --wall-magnetic-color: #3a3a3a;
+  --wall-magnetic-image: url('https://www.transparenttextures.com/patterns/dark-matter.png');
+
+  /* 砖石墙面系列 */
+  --wall-brick-red-color: #b56557;
+  --wall-brick-red-image: url('https://www.transparenttextures.com/patterns/brick-wall.png');
+
+  --wall-brick-white-color: #e8e4e0;
+  --wall-brick-white-image: url('https://www.transparenttextures.com/patterns/brick-wall-dark.png');
+
+  --wall-concrete-color: #a8a8a8;
+  --wall-concrete-image: url('https://www.transparenttextures.com/patterns/concrete-wall.png');
+
+  --wall-plaster-color: #e5e1d8;
+  --wall-plaster-image: url('https://www.transparenttextures.com/patterns/stucco.png');
+
+  --wall-sandstone-color: #d4c4a8;
+  --wall-sandstone-image: url('https://www.transparenttextures.com/patterns/sandpaper.png');
+
+  /* 木质系列 */
+  --wall-wood-oak-color: #c4a77d;
+  --wall-wood-oak-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+
+  --wall-wood-pine-color: #e8dcc4;
+  --wall-wood-pine-image: url('https://www.transparenttextures.com/patterns/wood-1.png');
+
+  --wall-wood-bamboo-color: #d4cba8;
+  --wall-wood-bamboo-image: url('https://www.transparenttextures.com/patterns/wood-2.png');
+
+  --wall-wood-dark-color: #5c4a3a;
+  --wall-wood-dark-image: url('https://www.transparenttextures.com/patterns/wood-3.png');
+
+  /* 肌理材质系列 */
+  --wall-linen-color: #d4d0c8;
+  --wall-linen-image: url('https://www.transparenttextures.com/patterns/gray-linen.png');
+
+  --wall-burlap-color: #a89070;
+  --wall-burlap-image: url('https://www.transparenttextures.com/patterns/burlap.png');
+
+  --wall-leather-color: #8b6f4e;
+  --wall-leather-image: url('https://www.transparenttextures.com/patterns/leather.png');
+
+  --wall-canvas-color: #d8d0c0;
+  --wall-canvas-image: url('https://www.transparenttextures.com/patterns/canvas-orange.png');
 }
 
-.wall-studio {
-    background-color: #111827;
-    background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+/* -------- 背景样式生成 -------- */
+
+/* 使用属性选择器批量生成背景样式，减少重复代码 */
+[class^='wall-'] {
+  background-repeat: repeat;
 }
 
-.wall-brick {
-    background-color: #e5e7eb;
-    background-image: radial-gradient(#d1d5db 1px, transparent 1px);
-    background-size: 24px 24px;
+/* 办公看板系列 */
+.wall-whiteboard {
+  background-color: var(--wall-whiteboard-color);
+  background-image: var(--wall-whiteboard-image);
+}
+.wall-cork {
+  background-color: var(--wall-cork-color);
+  background-image: var(--wall-cork-image);
+}
+.wall-felt {
+  background-color: var(--wall-felt-color);
+  background-image: var(--wall-felt-image);
+}
+.wall-magnetic {
+  background-color: var(--wall-magnetic-color);
+  background-image: var(--wall-magnetic-image);
 }
 
-.wall-wood {
-    background-color: #fdf2f8;
-    background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+/* 砖石墙面系列 */
+.wall-brick-red {
+  background-color: var(--wall-brick-red-color);
+  background-image: var(--wall-brick-red-image);
 }
-
+.wall-brick-white {
+  background-color: var(--wall-brick-white-color);
+  background-image: var(--wall-brick-white-image);
+}
 .wall-concrete {
-    background: #cbd5e1;
-    background-image: url('https://www.transparenttextures.com/patterns/concrete-wall-2.png');
+  background-color: var(--wall-concrete-color);
+  background-image: var(--wall-concrete-image);
+}
+.wall-plaster {
+  background-color: var(--wall-plaster-color);
+  background-image: var(--wall-plaster-image);
+}
+.wall-sandstone {
+  background-color: var(--wall-sandstone-color);
+  background-image: var(--wall-sandstone-image);
+}
+
+/* 木质系列 */
+.wall-wood-oak {
+  background-color: var(--wall-wood-oak-color);
+  background-image: var(--wall-wood-oak-image);
+}
+.wall-wood-pine {
+  background-color: var(--wall-wood-pine-color);
+  background-image: var(--wall-wood-pine-image);
+}
+.wall-wood-bamboo {
+  background-color: var(--wall-wood-bamboo-color);
+  background-image: var(--wall-wood-bamboo-image);
+}
+.wall-wood-dark {
+  background-color: var(--wall-wood-dark-color);
+  background-image: var(--wall-wood-dark-image);
+}
+
+/* 肌理材质系列 */
+.wall-linen {
+  background-color: var(--wall-linen-color);
+  background-image: var(--wall-linen-image);
+}
+.wall-burlap {
+  background-color: var(--wall-burlap-color);
+  background-image: var(--wall-burlap-image);
+}
+.wall-leather {
+  background-color: var(--wall-leather-color);
+  background-image: var(--wall-leather-image);
+}
+.wall-canvas {
+  background-color: var(--wall-canvas-color);
+  background-image: var(--wall-canvas-image);
+}
+
+/* -------- 预览小方块样式 -------- */
+.wall-preview {
+  position: relative;
+  overflow: hidden;
+}
+
+.wall-preview::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-size: 200%;
+}
+
+/* 
+ * 预览小方块背景样式
+ * 复用 CSS 变量，与主背景保持一致
+ */
+.wall-preview[data-wall='whiteboard']::before {
+  background-color: var(--wall-whiteboard-color);
+  background-image: var(--wall-whiteboard-image);
+}
+.wall-preview[data-wall='cork']::before {
+  background-color: var(--wall-cork-color);
+  background-image: var(--wall-cork-image);
+}
+.wall-preview[data-wall='felt']::before {
+  background-color: var(--wall-felt-color);
+  background-image: var(--wall-felt-image);
+}
+.wall-preview[data-wall='magnetic']::before {
+  background-color: var(--wall-magnetic-color);
+  background-image: var(--wall-magnetic-image);
+}
+
+.wall-preview[data-wall='brick-red']::before {
+  background-color: var(--wall-brick-red-color);
+  background-image: var(--wall-brick-red-image);
+}
+.wall-preview[data-wall='brick-white']::before {
+  background-color: var(--wall-brick-white-color);
+  background-image: var(--wall-brick-white-image);
+}
+.wall-preview[data-wall='concrete']::before {
+  background-color: var(--wall-concrete-color);
+  background-image: var(--wall-concrete-image);
+}
+.wall-preview[data-wall='plaster']::before {
+  background-color: var(--wall-plaster-color);
+  background-image: var(--wall-plaster-image);
+}
+.wall-preview[data-wall='sandstone']::before {
+  background-color: var(--wall-sandstone-color);
+  background-image: var(--wall-sandstone-image);
+}
+
+.wall-preview[data-wall='wood-oak']::before {
+  background-color: var(--wall-wood-oak-color);
+  background-image: var(--wall-wood-oak-image);
+}
+.wall-preview[data-wall='wood-pine']::before {
+  background-color: var(--wall-wood-pine-color);
+  background-image: var(--wall-wood-pine-image);
+}
+.wall-preview[data-wall='wood-bamboo']::before {
+  background-color: var(--wall-wood-bamboo-color);
+  background-image: var(--wall-wood-bamboo-image);
+}
+.wall-preview[data-wall='wood-dark']::before {
+  background-color: var(--wall-wood-dark-color);
+  background-image: var(--wall-wood-dark-image);
+}
+
+.wall-preview[data-wall='linen']::before {
+  background-color: var(--wall-linen-color);
+  background-image: var(--wall-linen-image);
+}
+.wall-preview[data-wall='burlap']::before {
+  background-color: var(--wall-burlap-color);
+  background-image: var(--wall-burlap-image);
+}
+.wall-preview[data-wall='leather']::before {
+  background-color: var(--wall-leather-color);
+  background-image: var(--wall-leather-image);
+}
+.wall-preview[data-wall='canvas']::before {
+  background-color: var(--wall-canvas-color);
+  background-image: var(--wall-canvas-image);
 }
 
 /* 便签容器 */
 .note-container {
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 4px !important;
-    box-shadow:
-        0 2px 4px rgba(0, 0, 0, 0.05),
-        0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: box-shadow 0.3s ease;
-    position: relative;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px !important;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.3s ease;
+  position: relative;
 }
 
 .note-container::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url('https://www.transparenttextures.com/patterns/beige-paper.png');
-    opacity: 0.08;
-    pointer-events: none;
-    z-index: 1;
-    border-radius: inherit;
-    mix-blend-mode: multiply;
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('https://www.transparenttextures.com/patterns/beige-paper.png');
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: inherit;
+  mix-blend-mode: multiply;
 }
 
 .note-dragging {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
-    z-index: 9999 !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+  z-index: 9999 !important;
 }
 
 .dock-container {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 24px !important;
 }
 
 ::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
