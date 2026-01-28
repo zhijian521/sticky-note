@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo, useRef, RefObject } from 'react';
-import { Plus, Command, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import { Plus, ZoomIn, ZoomOut, RotateCcw, Wallpaper } from 'lucide-react';
 import { Note, WallType, COLOR_MAP } from './types';
 import StickyNote from './components/StickyNote';
 import Canvas from './components/Canvas';
+import WallOptionButton from './components/WallOptionButton';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { COLORS, WALLS, Z_INDEX } from './constants/app';
+import { COLORS, WALLS, Z_INDEX, VALID_WALL_TYPES } from './constants/app';
 import { InstallPrompt } from './components/pwa';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useNoteOperations } from './hooks/useNoteOperations';
@@ -24,15 +25,12 @@ const App: React.FC = () => {
   const [wallType, setWallType] = useState<WallType>(() => {
     try {
       const saved = localStorage.getItem('wall_style_v10');
-      if (
-        saved &&
-        ['minimal', 'brick', 'wood', 'concrete', 'studio'].includes(saved)
-      ) {
+      if (saved && VALID_WALL_TYPES.includes(saved as WallType)) {
         return saved as WallType;
       }
-      return 'minimal';
+      return 'cork';
     } catch {
-      return 'minimal';
+      return 'cork';
     }
   });
   const [isWallMenuOpen, setIsWallMenuOpen] = useState(false);
@@ -214,10 +212,10 @@ const App: React.FC = () => {
             <button
               onClick={() => setIsWallMenuOpen(!isWallMenuOpen)}
               className={`p-2.5 rounded-xl transition-colors ${isWallMenuOpen ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
-              title="Change Wall Style"
-              aria-label="Change wall style"
+              title="更换背景"
+              aria-label="更换背景"
             >
-              <Command size={20} className="text-gray-600" />
+              <Wallpaper size={20} className="text-gray-600" />
             </button>
 
             <AnimatePresence>
@@ -226,20 +224,75 @@ const App: React.FC = () => {
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute bottom-full mb-6 left-1/2 -translate-x-1/2 flex flex-col gap-1 p-2 dock-container min-w-[180px]"
+                  className="absolute bottom-full mb-6 left-1/2 -translate-x-1/2 p-4 dock-container min-w-[360px] max-h-[420px] overflow-y-auto"
                 >
-                  {WALLS.map(w => (
-                    <button
-                      key={w.id}
-                      onClick={() => {
-                        setWallType(w.id);
-                        setIsWallMenuOpen(false);
-                      }}
-                      className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold transition-colors ${wallType === w.id ? 'bg-gray-900 text-white' : 'hover:bg-gray-50 text-gray-600'}`}
-                    >
-                      <w.icon size={16} /> {w.name}
-                    </button>
-                  ))}
+                  <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
+                    办公看板
+                  </div>
+                  <div className="grid grid-cols-4 gap-2 mb-4">
+                    {WALLS.slice(0, 4).map(w => (
+                      <WallOptionButton
+                        key={w.id}
+                        wall={w}
+                        isActive={wallType === w.id}
+                        onClick={() => {
+                          setWallType(w.id);
+                          setIsWallMenuOpen(false);
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
+                    砖石墙面
+                  </div>
+                  <div className="grid grid-cols-5 gap-2 mb-4">
+                    {WALLS.slice(4, 9).map(w => (
+                      <WallOptionButton
+                        key={w.id}
+                        wall={w}
+                        isActive={wallType === w.id}
+                        onClick={() => {
+                          setWallType(w.id);
+                          setIsWallMenuOpen(false);
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
+                    木质系列
+                  </div>
+                  <div className="grid grid-cols-4 gap-2 mb-4">
+                    {WALLS.slice(9, 13).map(w => (
+                      <WallOptionButton
+                        key={w.id}
+                        wall={w}
+                        isActive={wallType === w.id}
+                        onClick={() => {
+                          setWallType(w.id);
+                          setIsWallMenuOpen(false);
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
+                    肌理材质
+                  </div>
+                  <div className="grid grid-cols-4 gap-2">
+                    {WALLS.slice(13, 17).map(w => (
+                      <WallOptionButton
+                        key={w.id}
+                        wall={w}
+                        isActive={wallType === w.id}
+                        onClick={() => {
+                          setWallType(w.id);
+                          setIsWallMenuOpen(false);
+                        }}
+                      />
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
