@@ -19,7 +19,7 @@ export const useNotesStore = create<NotesStore>()(
   persist(
     set => ({
       notes: [],
-      wallType: 'minimal',
+      wallType: 'cork',
       isWallMenuOpen: false,
 
       addNote: color => {

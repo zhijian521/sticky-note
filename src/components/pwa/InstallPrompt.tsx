@@ -24,7 +24,7 @@ export const InstallPrompt = () => {
     const checkInstallStatus = () => {
       const isStandalone =
         window.matchMedia('(display-mode: standalone)').matches ||
-        (window.navigator as Window & { standalone?: boolean }).standalone ||
+        (window.navigator as Navigator & { standalone?: boolean }).standalone ||
         document.referrer.includes('android-app://');
 
       setIsInstalled(isStandalone);
