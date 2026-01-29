@@ -29,7 +29,7 @@ export const WallOptionButton: React.FC<WallOptionButtonProps> = memo(
       >
         <div
           className={`
-          w-10 h-10 rounded-lg border-2 transition-all overflow-hidden relative
+          wall-preview w-10 h-10 rounded-lg border-2 transition-all overflow-hidden relative
           ${isActive ? 'border-white/30' : 'border-black/5'}
         `}
           data-wall={wall.id}
