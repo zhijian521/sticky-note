@@ -1,114 +1,125 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Sticky Note
 
-# Sticky Note - 现代化便签画板
+一个现代化的便签应用，支持无限画板、缩放和拖拽功能。可以用来做笔记、整理思路、规划项目等。
 
-一个功能丰富的现代化便签应用，支持画板缩放、拖拽和多设备交互。
+![React](https://img.shields.io/badge/React-19.2.3-%2361DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-%233178C6)
+![Vite](https://img.shields.io/badge/Vite-7.3.0-%23646CFF)
 
-## ✨ 主要特性
+## 功能
 
-### 📝 核心功能
+- 创建、编辑、删除便签
+- 15种便签颜色可选
+- 5种墙面背景样式
+- 画板缩放（0.25x - 3x）
+- 拖拽移动画板
+- 鼠标滚轮缩放
+- 触屏手势支持（单指拖动、双指缩放）
+- PWA 支持（可离线使用）
 
-- **便签管理** - 创建、编辑、删除便签
-- **多彩便签** - 15种颜色选择
-- **墙壁背景** - 5种不同的墙壁样式
-- **图片支持** - 便签中插入图片
+## 快速开始
 
-### 🔍 画板功能
+需要先安装 Node.js。
 
-- **缩放控制** - 支持 0.25x 到 3x 缩放
-- **拖拽平移** - 鼠标拖拽移动画板
-- **鼠标滚轮缩放** - 智能跟随鼠标位置缩放
-- **一键重置** - 快速回到默认视图
+```bash
+# 安装依赖
+npm install
 
-### ⌨️ 快捷键支持
+# 启动开发服务器
+npm run dev
 
+# 构建生产版本
+npm run build
+```
+
+启动后访问 http://localhost:5173
+
+## 使用
+
+### 创建便签
+
+- 点击底部颜色按钮创建对应颜色的便签
+- 点击 "New Note" 创建随机颜色的便签
+- 新便签会出现在画板中央
+
+### 编辑便签
+
+- 点击便签内容区域开始编辑
+- 拖拽便签标题栏移动位置
+- 拖拽便签右下角调整大小
+- 点击工具栏的删除按钮删除便签
+
+### 画板操作
+
+- 使用右下角的 +/- 按钮缩放
+- 点击并拖拽空白区域移动画板
+- 使用鼠标滚轮缩放（会跟随鼠标位置）
+- 双指捏合缩放（触屏）
+
+### 快捷键
+
+- `Ctrl/Cmd + N` - 新建便签
 - `Ctrl/Cmd + +` - 放大
 - `Ctrl/Cmd + -` - 缩小
 - `Ctrl/Cmd + 0` - 重置视图
 
-### 📱 触屏支持
+### PWA 安装
 
-- **单指拖拽** - 移动画板
-- **双指缩放** - 捏合缩放手势
-- **触屏优化** - 流畅的触摸体验
+在支持的浏览器中可以看到安装提示，点击安装后应用就可以离线使用了。
 
-### 🎨 视觉效果
+## 项目结构
 
-- **流畅动画** - 缩放和平移动画效果
-- **现代UI** - 清晰的界面设计
-- **响应式** - 适配不同屏幕尺寸
+```
+src/
+├── components/      # 组件
+│   ├── note/       # 便签相关组件
+│   ├── pwa/        # PWA 组件
+│   ├── Canvas.tsx  # 画板
+│   └── ...
+├── hooks/          # 自定义 Hooks
+├── store/          # Zustand 状态管理
+├── utils/          # 工具函数
+├── constants/      # 常量
+├── types.ts        # 类型定义
+├── App.tsx
+└── main.tsx
+```
 
-## 🚀 快速开始
+## 开发命令
 
-**前置条件:** Node.js
+| 命令                | 说明           |
+| ------------------- | -------------- |
+| `npm run dev`       | 启动开发服务器 |
+| `npm run build`     | 构建           |
+| `npm run preview`   | 预览构建       |
+| `npm run lint`      | 代码检查       |
+| `npm run lint:fix`  | 自动修复       |
+| `npm run format`    | 格式化代码     |
+| `npm run typecheck` | 类型检查       |
+| `npm run test`      | 运行测试       |
+| `npm run test:ui`   | 测试界面       |
 
-1. 安装依赖:
+## 技术栈
 
-   ```bash
-   npm install
-   ```
+- React 19
+- TypeScript
+- Vite
+- Framer Motion（动画）
+- Zustand（状态管理）
+- Vitest（测试）
 
-2. 启动开发服务器:
+## 贡献
 
-   ```bash
-   npm run dev
-   ```
+欢迎提 Issue 和 Pull Request。
 
-3. 构建生产版本:
-   ```bash
-   npm run build
-   ```
+提交代码前请运行：
 
-## 🛠️ 开发
+```bash
+npm run lint
+npm run typecheck
+npm run test
+```
 
-### 可用脚本
+## License
 
-- `npm run dev` - 启动开发服务器
-- `npm run build` - 构建生产版本
-- `npm run preview` - 预览构建结果
-- `npm run lint` - 代码检查
-- `npm run lint:fix` - 自动修复代码问题
-- `npm run format` - 代码格式化
-- `npm run typecheck` - TypeScript 类型检查
-- `npm run test` - 运行测试
-- `npm run test:ui` - 测试可视化界面
-
-### 技术栈
-
-- **React 19** - 最新版本React
-- **TypeScript** - 类型安全
-- **Vite** - 快速构建工具
-- **Framer Motion** - 动画库
-- **Zustand** - 状态管理
-- **Vitest** - 测试框架
-
-## 📖 使用说明
-
-### 基本操作
-
-1. 点击下方颜色按钮创建对应颜色的便签
-2. 点击 "New Note" 创建随机颜色便签
-3. 点击便签文字开始编辑
-4. 拖拽便签右下角调整大小
-5. 拖拽便签标题栏移动位置
-
-### 画板操作
-
-1. 使用下方dock中的缩放控制按钮
-2. 点击并拖拽空白区域平移画板
-3. 使用键盘快捷键快速操作
-
-## 🎯 最佳实践
-
-这个项目遵循了2024年前端开发的最佳实践：
-
-- ✅ 严格TypeScript配置
-- ✅ 现代React Hooks使用
-- ✅ 组件化架构
-- ✅ 状态管理优化
-- ✅ 性能优化
-- ✅ 无障碍支持
-- ✅ 测试覆盖
-- ✅ 代码质量控制
+MIT
