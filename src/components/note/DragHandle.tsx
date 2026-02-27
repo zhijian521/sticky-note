@@ -11,6 +11,30 @@ interface DragHandleProps {
 
 const TOP_BOTTOM_HANDLE_SIZE = 30;
 const LEFT_RIGHT_HANDLE_SIZE = 24;
+const HANDLE_Z_INDEX = 50;
+
+const HANDLE_AREAS = [
+  {
+    ariaLabel: '顶部拖拽区域',
+    className: 'absolute left-0 right-0',
+    style: { top: 0, height: TOP_BOTTOM_HANDLE_SIZE },
+  },
+  {
+    ariaLabel: '底部拖拽区域',
+    className: 'absolute left-0 right-0',
+    style: { bottom: 0, height: TOP_BOTTOM_HANDLE_SIZE },
+  },
+  {
+    ariaLabel: '左侧拖拽区域',
+    className: 'absolute top-0 bottom-0',
+    style: { left: 0, width: LEFT_RIGHT_HANDLE_SIZE },
+  },
+  {
+    ariaLabel: '右侧拖拽区域',
+    className: 'absolute top-0 bottom-0',
+    style: { right: 0, width: LEFT_RIGHT_HANDLE_SIZE },
+  },
+] as const;
 
 const DragHandle: React.FC<DragHandleProps> = ({
   x,
@@ -21,93 +45,65 @@ const DragHandle: React.FC<DragHandleProps> = ({
 }) => {
   const cursorStyle = isDragging ? 'grabbing' : 'grab';
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     e.preventDefault();
+    e.stopPropagation();
 
     const startX = e.clientX;
     const startY = e.clientY;
     const startPageX = x.get();
     const startPageY = y.get();
+    const pointerId = e.pointerId;
 
     onDragStart();
 
-    const handleMouseMove = (me: MouseEvent) => {
-      const deltaX = me.clientX - startX;
-      const deltaY = me.clientY - startY;
+    const handlePointerMove = (pe: PointerEvent) => {
+      if (pe.pointerId !== pointerId) return;
+      pe.preventDefault();
+
+      const deltaX = pe.clientX - startX;
+      const deltaY = pe.clientY - startY;
       // 直接设置新位置 = 初始位置 + 偏移量
       x.set(startPageX + deltaX);
       y.set(startPageY + deltaY);
     };
 
-    const handleMouseUp = (me: MouseEvent) => {
-      const deltaX = me.clientX - startX;
-      const deltaY = me.clientY - startY;
+    const handlePointerUp = (pe: PointerEvent) => {
+      if (pe.pointerId !== pointerId) return;
+
+      const deltaX = pe.clientX - startX;
+      const deltaY = pe.clientY - startY;
       x.set(startPageX + deltaX);
       y.set(startPageY + deltaY);
 
       onDragEnd();
 
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('pointercancel', handlePointerUp);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('pointermove', handlePointerMove, { passive: false });
+    window.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('pointercancel', handlePointerUp);
   };
 
   return (
     <>
-      {/* 顶部拖拽条 */}
-      <div
-        onMouseDown={handleMouseDown}
-        className="absolute left-0 right-0"
-        style={{
-          top: 0,
-          height: TOP_BOTTOM_HANDLE_SIZE,
-          cursor: cursorStyle,
-          zIndex: 50
-        }}
-        aria-label="顶部拖拽区域"
-      />
-
-      {/* 底部拖拽条 */}
-      <div
-        onMouseDown={handleMouseDown}
-        className="absolute left-0 right-0"
-        style={{
-          bottom: 0,
-          height: TOP_BOTTOM_HANDLE_SIZE,
-          cursor: cursorStyle,
-          zIndex: 50
-        }}
-        aria-label="底部拖拽区域"
-      />
-
-      {/* 左侧拖拽条 */}
-      <div
-        onMouseDown={handleMouseDown}
-        className="absolute top-0 bottom-0"
-        style={{
-          left: 0,
-          width: LEFT_RIGHT_HANDLE_SIZE,
-          cursor: cursorStyle,
-          zIndex: 50
-        }}
-        aria-label="左侧拖拽区域"
-      />
-
-      {/* 右侧拖拽条 */}
-      <div
-        onMouseDown={handleMouseDown}
-        className="absolute top-0 bottom-0"
-        style={{
-          right: 0,
-          width: LEFT_RIGHT_HANDLE_SIZE,
-          cursor: cursorStyle,
-          zIndex: 50
-        }}
-        aria-label="右侧拖拽区域"
-      />
+      {HANDLE_AREAS.map(area => (
+        <div
+          key={area.ariaLabel}
+          onPointerDown={handlePointerDown}
+          className={area.className}
+          style={{
+            ...area.style,
+            cursor: cursorStyle,
+            zIndex: HANDLE_Z_INDEX,
+            touchAction: 'none',
+          }}
+          aria-label={area.ariaLabel}
+        />
+      ))}
     </>
   );
 };

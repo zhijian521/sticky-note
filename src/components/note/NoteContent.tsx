@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { X } from 'lucide-react';
 import { Note } from '../../types';
 import { NOTE_TEXT_CLASSES } from '../../constants/note';
@@ -30,6 +30,12 @@ const NoteContent: React.FC<NoteContentProps> = ({ note, onUpdate }) => {
     setIsEditing(false);
   };
 
+  const handleRemoveImage = useCallback(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { imageUrl, ...rest } = note;
+    onUpdate(rest);
+  }, [note, onUpdate]);
+
   return (
     <div
       className="relative flex-grow flex flex-col overflow-hidden"
@@ -43,11 +49,7 @@ const NoteContent: React.FC<NoteContentProps> = ({ note, onUpdate }) => {
             className="w-full h-full object-cover rounded shadow-inner"
           />
           <button
-            onClick={() => {
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              const { imageUrl, ...rest } = note;
-              onUpdate(rest);
-            }}
+            onClick={handleRemoveImage}
             className="absolute top-1 right-1 p-1 bg-black/40 text-white rounded-full opacity-0 group-hover/img:opacity-100 transition-opacity"
             aria-label="移除图片"
           >

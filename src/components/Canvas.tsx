@@ -20,11 +20,9 @@ const Canvas = forwardRef<HTMLDivElement, CanvasProps>(
   ({ viewport, children, className = '', onViewportChange }, ref) => {
     const internalRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
-    const [dragStart, setDragStart] = useState<Position>({ x: 0, y: 0 });
-    const [startPosition, setStartPosition] = useState<Position>({
-      x: 0,
-      y: 0,
-    });
+    const dragStartRef = useRef<Position | null>(null);
+    const startPositionRef = useRef<Position | null>(null);
+    const activePointerIdRef = useRef<number | null>(null);
 
     // Forward ref to external if provided
     useEffect(() => {
@@ -37,43 +35,52 @@ const Canvas = forwardRef<HTMLDivElement, CanvasProps>(
     }, [ref]);
 
     // Handle mouse drag
-    const handleMouseDown = useCallback(
-      (e: MouseEvent) => {
+    const handlePointerDown = useCallback(
+      (e: PointerEvent) => {
         const target = e.target as HTMLElement;
         const isClickingOnNote = target.closest('[data-note-id]');
 
+        if (isClickingOnNote || activePointerIdRef.current !== null) return;
+
         // Only start dragging if clicking on canvas container, not on notes
-        if (!isClickingOnNote) {
-          setIsDragging(true);
-          setDragStart({ x: e.clientX, y: e.clientY });
-          setStartPosition({ ...viewport.position });
-          e.preventDefault();
-        }
+        activePointerIdRef.current = e.pointerId;
+        setIsDragging(true);
+        dragStartRef.current = { x: e.clientX, y: e.clientY };
+        startPositionRef.current = { ...viewport.position };
+        e.preventDefault();
       },
       [viewport.position]
     );
 
-    const handleMouseMove = useCallback(
-      (e: MouseEvent) => {
-        if (isDragging) {
-          const deltaX = e.clientX - dragStart.x;
-          const deltaY = e.clientY - dragStart.y;
+    const handlePointerMove = useCallback(
+      (e: PointerEvent) => {
+        if (activePointerIdRef.current !== e.pointerId) return;
 
-          const newPosition = {
+        const dragStart = dragStartRef.current;
+        const startPosition = startPositionRef.current;
+        if (!isDragging || !dragStart || !startPosition) return;
+
+        const deltaX = e.clientX - dragStart.x;
+        const deltaY = e.clientY - dragStart.y;
+
+        onViewportChange({
+          position: {
             x: startPosition.x + deltaX,
             y: startPosition.y + deltaY,
-          };
-
-          onViewportChange({ position: newPosition });
-        }
+          },
+        });
       },
-      [isDragging, dragStart, startPosition, onViewportChange]
+      [isDragging, onViewportChange]
     );
 
-    const handleMouseUp = useCallback(() => {
-      if (isDragging) {
-        setIsDragging(false);
-      }
+    const handlePointerUp = useCallback((e: PointerEvent) => {
+      if (activePointerIdRef.current !== e.pointerId) return;
+
+      if (!isDragging) return;
+      setIsDragging(false);
+      activePointerIdRef.current = null;
+      dragStartRef.current = null;
+      startPositionRef.current = null;
     }, [isDragging]);
 
     // Set up event listeners
@@ -81,16 +88,18 @@ const Canvas = forwardRef<HTMLDivElement, CanvasProps>(
       const element = internalRef.current;
       if (!element) return;
 
-      element.addEventListener('mousedown', handleMouseDown);
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+      element.addEventListener('pointerdown', handlePointerDown);
+      document.addEventListener('pointermove', handlePointerMove);
+      document.addEventListener('pointerup', handlePointerUp);
+      document.addEventListener('pointercancel', handlePointerUp);
 
       return () => {
-        element.removeEventListener('mousedown', handleMouseDown);
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
+        element.removeEventListener('pointerdown', handlePointerDown);
+        document.removeEventListener('pointermove', handlePointerMove);
+        document.removeEventListener('pointerup', handlePointerUp);
+        document.removeEventListener('pointercancel', handlePointerUp);
       };
-    }, [handleMouseDown, handleMouseMove, handleMouseUp]);
+    }, [handlePointerDown, handlePointerMove, handlePointerUp]);
 
     const transform = `translate(${viewport.position.x}px, ${viewport.position.y}px) scale(${viewport.scale})`;
     const cursor = isDragging
@@ -113,7 +122,7 @@ const Canvas = forwardRef<HTMLDivElement, CanvasProps>(
       <div
         ref={internalRef}
         className={`canvas-container absolute inset-0 ${className}`}
-        style={{ cursor }}
+        style={{ cursor, touchAction: 'none' }}
       >
         <motion.div className="relative w-full h-full" {...motionProps}>
           {children}

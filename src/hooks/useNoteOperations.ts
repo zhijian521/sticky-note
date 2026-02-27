@@ -6,6 +6,9 @@ export function useNoteOperations() {
   const generateId = useCallback(() => {
     return Math.random().toString(36).substring(2, 11);
   }, []);
+  const getRandomColor = useCallback(() => {
+    return COLORS[Math.floor(Math.random() * COLORS.length)] as NoteColor;
+  }, []);
 
   const calculatePosition = useCallback((width: number, height: number) => {
     return {
@@ -16,17 +19,14 @@ export function useNoteOperations() {
 
   const createNote = useCallback(
     (color?: NoteColor, imageUrl?: string, text?: string): Note => {
-      const hasImage = !!imageUrl;
-      const dimensions = hasImage
+      const dimensions = imageUrl
         ? NOTE_DIMENSIONS.IMAGE_NOTE
         : NOTE_DIMENSIONS.TEXT_NOTE;
 
       const note: Note = {
         id: generateId(),
         text: text || '',
-        color:
-          color ||
-          (COLORS[Math.floor(Math.random() * COLORS.length)] as NoteColor),
+        color: color || getRandomColor(),
         position: calculatePosition(dimensions.width, dimensions.height),
         width: dimensions.width,
         height: dimensions.height,
@@ -40,7 +40,7 @@ export function useNoteOperations() {
 
       return note;
     },
-    [generateId, calculatePosition]
+    [calculatePosition, generateId, getRandomColor]
   );
 
   return { createNote };

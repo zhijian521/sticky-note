@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 export function useLocalStorage<T>(
   key: string,
@@ -22,17 +22,23 @@ export function useLocalStorage<T>(
     }
   }, [key]);
 
-  const setValue = (value: T | ((val: T) => T)) => {
-    try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
-      if (isInitialized.current) {
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+  const setValue = useCallback(
+    (value: T | ((val: T) => T)) => {
+      try {
+        setStoredValue(prev => {
+          const valueToStore =
+            value instanceof Function ? value(prev) : value;
+          if (isInitialized.current) {
+            window.localStorage.setItem(key, JSON.stringify(valueToStore));
+          }
+          return valueToStore;
+        });
+      } catch (error) {
+        console.error(`写入 localStorage 键 "${key}" 失败：`, error);
       }
-    } catch (error) {
-      console.error(`写入 localStorage 键 "${key}" 失败：`, error);
-    }
-  };
+    },
+    [key]
+  );
 
   return [storedValue, setValue, isLoaded];
 }

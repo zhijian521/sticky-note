@@ -5,17 +5,44 @@ const MIN_SCALE = 0.25;
 const MAX_SCALE = 3.0;
 const SCALE_STEP = 0.1;
 const RESET_SCALE = 1.0;
+const VIEWPORT_STORAGE_KEY = 'wallnotes_viewport';
+const SCREEN_MATCH_THRESHOLD = 120;
+
+const clampScale = (scale: number) => Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
+
+interface StoredViewportState extends ViewportState {
+  screen: {
+    width: number;
+    height: number;
+  };
+}
+
+const isSameScreenSize = (
+  screen: StoredViewportState['screen'],
+  current: StoredViewportState['screen']
+) => {
+  return (
+    Math.abs(screen.width - current.width) <= SCREEN_MATCH_THRESHOLD &&
+    Math.abs(screen.height - current.height) <= SCREEN_MATCH_THRESHOLD
+  );
+};
 
 export function useViewport() {
   const [viewport, setViewport] = useState<ViewportState>(() => {
-    const saved = localStorage.getItem('wallnotes_viewport');
+    const currentScreen = { width: window.innerWidth, height: window.innerHeight };
+    const saved = localStorage.getItem(VIEWPORT_STORAGE_KEY);
     if (saved) {
       try {
-        const parsed = JSON.parse(saved);
-        if (parsed.scale && parsed.position) {
+        const parsed = JSON.parse(saved) as Partial<StoredViewportState>;
+        if (
+          parsed.scale !== undefined &&
+          parsed.position &&
+          parsed.screen &&
+          isSameScreenSize(parsed.screen, currentScreen)
+        ) {
           return {
-            scale: Math.max(MIN_SCALE, Math.min(MAX_SCALE, parsed.scale)),
-            position: parsed.position || { x: 0, y: 0 },
+            scale: clampScale(parsed.scale),
+            position: parsed.position,
           };
         }
       } catch {
@@ -27,7 +54,14 @@ export function useViewport() {
 
   // Save viewport state to localStorage
   useEffect(() => {
-    localStorage.setItem('wallnotes_viewport', JSON.stringify(viewport));
+    const stateToStore: StoredViewportState = {
+      ...viewport,
+      screen: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+      },
+    };
+    localStorage.setItem(VIEWPORT_STORAGE_KEY, JSON.stringify(stateToStore));
   }, [viewport]);
 
   // Update viewport position when scale changes to center view
@@ -37,10 +71,7 @@ export function useViewport() {
 
       // Ensure scale stays within bounds
       if (newState.scale !== undefined) {
-        newState.scale = Math.max(
-          MIN_SCALE,
-          Math.min(MAX_SCALE, newState.scale)
-        );
+        newState.scale = clampScale(newState.scale);
       }
 
       return newState;
@@ -75,22 +106,22 @@ export function useViewport() {
     [viewport]
   );
 
+  const zoomBy = useCallback(
+    (delta: number) => {
+      const newScale = clampScale(viewport.scale + delta);
+      updateViewport(calculateCenterZoom(newScale));
+    },
+    [viewport.scale, calculateCenterZoom, updateViewport]
+  );
+
   // Zoom functions
   const zoomIn = useCallback(() => {
-    const newScale = Math.max(
-      MIN_SCALE,
-      Math.min(MAX_SCALE, viewport.scale + SCALE_STEP)
-    );
-    updateViewport(calculateCenterZoom(newScale));
-  }, [viewport.scale, calculateCenterZoom, updateViewport]);
+    zoomBy(SCALE_STEP);
+  }, [zoomBy]);
 
   const zoomOut = useCallback(() => {
-    const newScale = Math.max(
-      MIN_SCALE,
-      Math.min(MAX_SCALE, viewport.scale - SCALE_STEP)
-    );
-    updateViewport(calculateCenterZoom(newScale));
-  }, [viewport.scale, calculateCenterZoom, updateViewport]);
+    zoomBy(-SCALE_STEP);
+  }, [zoomBy]);
 
   const resetZoom = useCallback(() => {
     updateViewport({ scale: RESET_SCALE, position: { x: 0, y: 0 } });
@@ -98,7 +129,7 @@ export function useViewport() {
 
   const setZoom = useCallback(
     (scale: number) => {
-      const clampedScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
+      const clampedScale = clampScale(scale);
       updateViewport(calculateCenterZoom(clampedScale));
     },
     [calculateCenterZoom, updateViewport]

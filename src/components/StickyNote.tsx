@@ -11,6 +11,10 @@ import DragHandle from './note/DragHandle';
 import StylePanel from './note/StylePanel';
 import NoteContent from './note/NoteContent';
 
+const clampNoteSize = (size: number) => {
+  return Math.max(NOTE_DIMENSIONS.MIN_SIZE, size);
+};
+
 interface StickyNoteProps {
   note: Note;
   onUpdate: (id: string, updates: Partial<Note>) => void;
@@ -28,6 +32,7 @@ const StickyNote: React.FC<StickyNoteProps> = memo(
     const x = useMotionValue(note.position.x);
     const y = useMotionValue(note.position.y);
     const scale = useSpring(useMotionValue(1), { stiffness: 300, damping: 20 });
+    const noteId = note.id;
 
     useEffect(() => {
       x.set(note.position.x);
@@ -37,15 +42,15 @@ const StickyNote: React.FC<StickyNoteProps> = memo(
     const handleDragStart = useCallback(() => {
       setIsDragging(true);
       scale.set(1.03);
-      onFocus(note.id);
-    }, [note.id, onFocus, scale]);
+      onFocus(noteId);
+    }, [noteId, onFocus, scale]);
 
     const handleDragEnd = useCallback(() => {
       setIsDragging(false);
       scale.set(1);
       // 保存当前位置
-      onUpdate(note.id, { position: { x: x.get(), y: y.get() } });
-    }, [note.id, onUpdate, x, y, scale]);
+      onUpdate(noteId, { position: { x: x.get(), y: y.get() } });
+    }, [noteId, onUpdate, x, y, scale]);
 
     const handleNoteClick = useCallback(
       (e: React.MouseEvent) => {
@@ -54,10 +59,10 @@ const StickyNote: React.FC<StickyNoteProps> = memo(
           !(e.target instanceof HTMLTextAreaElement) &&
           !(e.target instanceof HTMLInputElement)
         ) {
-          onFocus(note.id);
+          onFocus(noteId);
         }
       },
-      [note.id, onFocus]
+      [noteId, onFocus]
     );
 
     const handleResizeStart = useCallback(
@@ -72,15 +77,9 @@ const StickyNote: React.FC<StickyNoteProps> = memo(
         const startY = e.clientY;
 
         const onMove = (me: MouseEvent) => {
-          onUpdate(note.id, {
-            width: Math.max(
-              NOTE_DIMENSIONS.MIN_SIZE,
-              startW + (me.clientX - startX)
-            ),
-            height: Math.max(
-              NOTE_DIMENSIONS.MIN_SIZE,
-              startH + (me.clientY - startY)
-            ),
+          onUpdate(noteId, {
+            width: clampNoteSize(startW + (me.clientX - startX)),
+            height: clampNoteSize(startH + (me.clientY - startY)),
           });
         };
 
@@ -93,15 +92,30 @@ const StickyNote: React.FC<StickyNoteProps> = memo(
         window.addEventListener('mousemove', onMove);
         window.addEventListener('mouseup', onUp);
       },
-      [note.id, note.width, note.height, onUpdate]
+      [noteId, note.width, note.height, onUpdate]
     );
 
     const handleColorSelect = useCallback(
       (color: typeof note.color) => {
-        onUpdate(note.id, { color });
+        onUpdate(noteId, { color });
         setIsStyling(false);
       },
-      [note, onUpdate]
+      [noteId, onUpdate]
+    );
+
+    const handleToggleStyling = useCallback(() => {
+      setIsStyling(prev => !prev);
+    }, []);
+
+    const handleDelete = useCallback(() => {
+      onDelete(noteId);
+    }, [noteId, onDelete]);
+
+    const handleContentUpdate = useCallback(
+      (updates: Partial<Note>) => {
+        onUpdate(noteId, updates);
+      },
+      [noteId, onUpdate]
     );
 
     const canDrag = !isStyling && !isResizing;
@@ -140,14 +154,11 @@ const StickyNote: React.FC<StickyNoteProps> = memo(
 
         <NoteToolbar
           isStyling={isStyling}
-          onToggleStyling={() => setIsStyling(!isStyling)}
-          onDelete={() => onDelete(note.id)}
+          onToggleStyling={handleToggleStyling}
+          onDelete={handleDelete}
         />
 
-        <NoteContent
-          note={note}
-          onUpdate={updates => onUpdate(note.id, updates)}
-        />
+        <NoteContent note={note} onUpdate={handleContentUpdate} />
 
         <StylePanel
           isOpen={isStyling}

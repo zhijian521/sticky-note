@@ -13,13 +13,19 @@ const NoteToolbar: React.FC<NoteToolbarProps> = ({
   onToggleStyling,
   onDelete
 }) => {
+  const handleButtonClick =
+    (callback: () => void) => (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      callback();
+    };
+
   return (
     <div
       className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
       style={{ zIndex: Z_INDEX.NOTE_TOOLBAR }}
     >
       <button
-        onClick={(e) => { e.stopPropagation(); onToggleStyling(); }}
+        onClick={handleButtonClick(onToggleStyling)}
         className={`p-1.5 hover:bg-black/5 rounded-md transition-colors ${isStyling ? 'bg-gray-100' : ''}`}
         title="更换颜色"
         aria-label="更换便签颜色"
@@ -27,7 +33,7 @@ const NoteToolbar: React.FC<NoteToolbarProps> = ({
         <Palette size={14} className="text-black/40" />
       </button>
       <button
-        onClick={(e) => { e.stopPropagation(); onDelete(); }}
+        onClick={handleButtonClick(onDelete)}
         className="p-1.5 hover:bg-red-500/10 rounded-md transition-colors text-red-500/60 hover:text-red-500"
         title="删除便签"
         aria-label="删除便签"
