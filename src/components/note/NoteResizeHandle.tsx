@@ -15,7 +15,7 @@ const NoteResizeHandle: React.FC<NoteResizeHandleProps> = ({
       onMouseDown={onResizeStart}
       className="absolute bottom-1 right-1 cursor-nwse-resize p-1.5 opacity-0 group-hover:opacity-40 transition-opacity hover:opacity-100"
       style={{ zIndex: Z_INDEX.NOTE_RESIZE_HANDLE }}
-      aria-label="Resize note"
+      aria-label="调整便签大小"
     >
       <svg
         viewBox="0 0 1024 1024"

@@ -15,7 +15,7 @@ export function useLocalStorage<T>(
         setStoredValue(JSON.parse(item));
       }
     } catch (error) {
-      console.error(`Error loading localStorage key "${key}":`, error);
+      console.error(`读取 localStorage 键 "${key}" 失败：`, error);
     } finally {
       setIsLoaded(true);
       isInitialized.current = true;
@@ -30,7 +30,7 @@ export function useLocalStorage<T>(
         window.localStorage.setItem(key, JSON.stringify(valueToStore));
       }
     } catch (error) {
-      console.error(`Error setting localStorage key "${key}":`, error);
+      console.error(`写入 localStorage 键 "${key}" 失败：`, error);
     }
   };
 

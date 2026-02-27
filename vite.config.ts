@@ -17,10 +17,10 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['logo.png', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Sticky Note - Physical Workspace',
-        short_name: 'Sticky Note',
+        name: 'Sticky Note - 物理质感便签墙',
+        short_name: '便签墙',
         description:
-          'Create and organize digital sticky notes with a realistic paper-like experience',
+          '创建和整理具备真实纸张质感的数字便签',
         theme_color: '#f5f5dc',
         background_color: '#f5f5dc',
         display: 'standalone',

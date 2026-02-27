@@ -77,7 +77,7 @@ export const InstallPrompt = () => {
         setShowPrompt(false);
       }
     } catch (error) {
-      console.error('Error during install prompt:', error);
+      console.error('显示安装提示时出错：', error);
     }
   };
 
@@ -97,7 +97,7 @@ export const InstallPrompt = () => {
         <button
           onClick={handleDismiss}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
-          aria-label="Dismiss"
+          aria-label="关闭提示"
         >
           <X size={20} />
         </button>
@@ -109,18 +109,17 @@ export const InstallPrompt = () => {
 
           <div className="flex-1">
             <h3 className="font-semibold text-gray-900 mb-1">
-              Install Sticky Note
+              安装 Sticky Note
             </h3>
             <p className="text-sm text-gray-600 mb-4">
-              Install the app for a better experience with offline support and
-              quick access
+              安装后可获得更好的使用体验，支持离线访问和快速打开。
             </p>
 
             <button
               onClick={handleInstall}
               className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-medium py-2 px-4 rounded-lg shadow-md transition-all duration-200"
             >
-              Install App
+              立即安装
             </button>
           </div>
         </div>

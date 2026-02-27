@@ -6,7 +6,13 @@ import Canvas from './components/Canvas';
 import WallOptionButton from './components/WallOptionButton';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { COLORS, WALLS, Z_INDEX, VALID_WALL_TYPES } from './constants/app';
+import {
+  COLORS,
+  WALLS,
+  Z_INDEX,
+  VALID_WALL_TYPES,
+  COLOR_LABELS,
+} from './constants/app';
 import { InstallPrompt } from './components/pwa';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useNoteOperations } from './hooks/useNoteOperations';
@@ -95,7 +101,7 @@ const App: React.FC = () => {
     <div
       className="relative w-screen h-screen overflow-hidden"
       role="application"
-      aria-label="Sticky Notes Wall"
+      aria-label="便签墙"
     >
       {/* Canvas for zoom and pan */}
       <Canvas
@@ -113,7 +119,7 @@ const App: React.FC = () => {
         <div
           className="absolute inset-0"
           style={{ zIndex: Z_INDEX.BASE }}
-          aria-label="Notes container"
+          aria-label="便签容器"
         >
           <AnimatePresence>
             {sortedNotes.map((note, index) => (
@@ -147,8 +153,8 @@ const App: React.FC = () => {
                 onClick={() => addNote(c)}
                 className="w-7 h-7 rounded-full border border-black/5 hover:scale-110 active:scale-90 transition-transform shadow-sm"
                 style={{ backgroundColor: COLOR_MAP[c].replace('0.85', '1') }}
-                aria-label={`Create ${c} note`}
-                title={c}
+                aria-label={`创建${COLOR_LABELS[c]}便签`}
+                title={COLOR_LABELS[c]}
               />
             ))}
           </div>
@@ -202,7 +208,7 @@ const App: React.FC = () => {
             className="ml-2 px-5 py-2.5 bg-gray-900 text-white rounded-[16px] transition-all flex items-center gap-2 hover:bg-black active:scale-95 text-sm font-bold shadow-lg"
           >
             <Plus size={18} strokeWidth={3} />
-            <span>New Note</span>
+            <span>新建便签</span>
           </button>
 
           <div

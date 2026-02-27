@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { NoteColor, COLOR_MAP } from '../../types';
-import { ALL_COLORS, Z_INDEX } from '../../constants/app';
+import { ALL_COLORS, COLOR_LABELS, Z_INDEX } from '../../constants/app';
 
 interface StylePanelProps {
   isOpen: boolean;
@@ -29,11 +29,13 @@ const StylePanel: React.FC<StylePanelProps> = ({
           onClick={e => e.stopPropagation()}
         >
           <div className="flex justify-between items-center mb-2">
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Select Color</span>
+            <span className="text-[10px] font-bold text-gray-400 tracking-widest">
+              选择颜色
+            </span>
             <button
               onClick={onClose}
               className="p-1 hover:bg-black/5 rounded-full"
-              aria-label="Close style panel"
+              aria-label="关闭样式面板"
             >
               <X size={16} />
             </button>
@@ -45,7 +47,7 @@ const StylePanel: React.FC<StylePanelProps> = ({
                 onClick={() => onColorSelect(c)}
                 className={`h-10 rounded-md transition-all hover:scale-105 active:scale-95 border border-black/5 ${currentColor === c ? 'ring-2 ring-blue-400 ring-offset-2' : ''}`}
                 style={{ backgroundColor: COLOR_MAP[c].replace('0.7', '1') }}
-                aria-label={`Select ${c} color`}
+                aria-label={`选择${COLOR_LABELS[c]}颜色`}
               />
             ))}
           </div>

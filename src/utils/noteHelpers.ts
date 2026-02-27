@@ -7,7 +7,7 @@ export function getPuckColor(color: NoteColor): string {
 }
 
 export function formatDate(timestamp: number): string {
-  return new Date(timestamp).toLocaleDateString(undefined, {
+  return new Date(timestamp).toLocaleDateString('zh-CN', {
     month: 'short',
     day: 'numeric',
   });
@@ -22,7 +22,7 @@ export function parseBase64Image(base64Image: string): {
   const mimeTypeMatch = base64Image.match(/data:([^;]+);/);
 
   if (!mimeTypeMatch?.[1]) {
-    throw new Error('Invalid base64 image format');
+    throw new Error('无效的 Base64 图片格式');
   }
 
   const mimeType = mimeTypeMatch[1];

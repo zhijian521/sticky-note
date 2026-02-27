@@ -8,7 +8,7 @@ export function useWallStyle(wallType: WallType) {
       localStorage.setItem(STORAGE_KEYS.WALL_STYLE, wallType);
       document.body.className = `wall-${wallType}`;
     } catch (error) {
-      console.error('Error updating wall style:', error);
+      console.error('更新背景样式失败：', error);
     }
   }, [wallType]);
 }

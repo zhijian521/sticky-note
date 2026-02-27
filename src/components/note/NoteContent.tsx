@@ -39,7 +39,7 @@ const NoteContent: React.FC<NoteContentProps> = ({ note, onUpdate }) => {
         <div className="relative w-full h-40 mb-3 group/img shrink-0">
           <img
             src={note.imageUrl}
-            alt="Note Content"
+            alt="便签图片"
             className="w-full h-full object-cover rounded shadow-inner"
           />
           <button
@@ -49,7 +49,7 @@ const NoteContent: React.FC<NoteContentProps> = ({ note, onUpdate }) => {
               onUpdate(rest);
             }}
             className="absolute top-1 right-1 p-1 bg-black/40 text-white rounded-full opacity-0 group-hover/img:opacity-100 transition-opacity"
-            aria-label="Remove image"
+            aria-label="移除图片"
           >
             <X size={12} />
           </button>
@@ -63,7 +63,7 @@ const NoteContent: React.FC<NoteContentProps> = ({ note, onUpdate }) => {
           onChange={e => setTempText(e.target.value)}
           onBlur={handleSave}
           className={`${NOTE_TEXT_CLASSES} flex-grow h-full`}
-          placeholder="Write something..."
+          placeholder="写点什么..."
         />
       ) : (
         <div
@@ -72,7 +72,7 @@ const NoteContent: React.FC<NoteContentProps> = ({ note, onUpdate }) => {
         >
           {note.text || (
             <span className="opacity-30 font-normal italic text-sm">
-              Tap to edit...
+              点击编辑...
             </span>
           )}
         </div>

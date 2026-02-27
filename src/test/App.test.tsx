@@ -11,7 +11,7 @@ describe('App', () => {
   it('renders without crashing', () => {
     render(<App />);
     expect(
-      screen.getByRole('button', { name: /new note/i })
+      screen.getByRole('button', { name: /新建便签/i })
     ).toBeInTheDocument();
   });
 
@@ -34,13 +34,13 @@ describe('App', () => {
 
   it('renders canvas container', () => {
     render(<App />);
-    expect(screen.getByLabelText('Notes container')).toBeInTheDocument();
+    expect(screen.getByLabelText('便签容器')).toBeInTheDocument();
   });
 
   it('canvas container supports drag interactions', () => {
     render(<App />);
     const canvas = screen
-      .getByLabelText('Notes container')
+      .getByLabelText('便签容器')
       .closest('.canvas-container');
     expect(canvas).toBeInTheDocument();
   });
@@ -48,7 +48,7 @@ describe('App', () => {
   it('canvas has correct cursor styles', () => {
     render(<App />);
     const canvas = screen
-      .getByLabelText('Notes container')
+      .getByLabelText('便签容器')
       .closest('.canvas-container');
     expect(canvas).toHaveStyle({ cursor: 'default' });
   });

@@ -8,18 +8,18 @@ import { registerSW } from 'virtual:pwa-register';
 // Register PWA service worker
 registerSW({
   onNeedRefresh() {
-    if (confirm('New content available. Reload to update?')) {
+    if (confirm('检测到新内容，是否立即刷新更新？')) {
       location.reload();
     }
   },
   onOfflineReady() {
-    console.log('PWA application is ready for offline use.');
+    console.log('PWA 应用已就绪，可离线使用。');
   },
 });
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
-  throw new Error('Could not find root element to mount to');
+  throw new Error('未找到根节点，无法挂载应用。');
 }
 
 const root = ReactDOM.createRoot(rootElement);

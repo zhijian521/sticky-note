@@ -40,6 +40,24 @@ export const ALL_COLORS: NoteColor[] = [
   'glass',
 ];
 
+export const COLOR_LABELS: Record<NoteColor, string> = {
+  yellow: '黄色',
+  pink: '粉色',
+  blue: '蓝色',
+  green: '绿色',
+  orange: '橙色',
+  purple: '紫色',
+  glass: '玻璃',
+  cream: '奶油',
+  mint: '薄荷',
+  coral: '珊瑚',
+  lavender: '薰衣草',
+  sage: '鼠尾草',
+  peach: '蜜桃',
+  sky: '天空',
+  tan: '棕褐',
+};
+
 export interface WallOption {
   id: WallType;
   name: string;

@@ -21,16 +21,16 @@ const NoteToolbar: React.FC<NoteToolbarProps> = ({
       <button
         onClick={(e) => { e.stopPropagation(); onToggleStyling(); }}
         className={`p-1.5 hover:bg-black/5 rounded-md transition-colors ${isStyling ? 'bg-gray-100' : ''}`}
-        title="Change Color"
-        aria-label="Change note color"
+        title="更换颜色"
+        aria-label="更换便签颜色"
       >
         <Palette size={14} className="text-black/40" />
       </button>
       <button
         onClick={(e) => { e.stopPropagation(); onDelete(); }}
         className="p-1.5 hover:bg-red-500/10 rounded-md transition-colors text-red-500/60 hover:text-red-500"
-        title="Delete Note"
-        aria-label="Delete note"
+        title="删除便签"
+        aria-label="删除便签"
       >
         <Trash2 size={14} />
       </button>
