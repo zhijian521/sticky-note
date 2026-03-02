@@ -96,7 +96,10 @@ const Dock: React.FC<DockProps> = ({
             <ZoomOut size={16} />
           </button>
 
-          <div className="flex items-center justify-center min-w-[40px] px-2 text-sm font-medium text-gray-700">
+          <div
+            className="flex items-center justify-center w-[52px] px-2 text-sm font-medium text-gray-700 tabular-nums shrink-0"
+            style={{ fontVariantNumeric: 'tabular-nums' }}
+          >
             {zoomPercentage}%
           </div>
 
