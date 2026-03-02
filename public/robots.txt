@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Host: sticky.yuwb.dev
+Sitemap: https://sticky.yuwb.dev/sitemap.xml

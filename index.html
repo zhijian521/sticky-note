@@ -2,46 +2,90 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sticky Note 便签墙</title>
+    <title>Sticky Note 便签墙 - 真实纸张质感的数字便签应用</title>
     
     <!-- Primary SEO Meta Tags -->
-    <meta name="description" content="Sticky Note 是一个具备真实纸张质感的数字便签空间。你可以创建、整理并协作管理便签，适用于头脑风暴、项目规划与可视化思考。">
+    <meta name="description" content="Sticky Note 是具备真实纸张质感的数字便签墙，支持创建、整理和可视化管理便签，适用于头脑风暴、任务规划与灵感记录。">
     <meta name="keywords" content="便签, 数字便签, 协作, 头脑风暴, 可视化思考, 工作空间, 便签墙, 记录, 规划工具">
     <meta name="author" content="Sticky Note 团队">
     <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
     <meta name="language" content="zh-CN">
     <meta name="theme-color" content="#f5f5dc">
+    <meta name="format-detection" content="telephone=no,email=no,address=no">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
+    <meta property="og:locale" content="zh_CN">
     <meta property="og:url" content="https://sticky.yuwb.dev/">
-    <meta property="og:title" content="Sticky Note - 物理质感便签墙 | 数字便签">
-    <meta property="og:description" content="创建并整理具备真实纸张质感的数字便签，适用于头脑风暴与可视化协作。">
+    <meta property="og:title" content="Sticky Note 便签墙 - 真实纸张质感的数字便签应用">
+    <meta property="og:description" content="创建并整理具备真实纸张质感的数字便签，适用于头脑风暴、任务规划与可视化协作。">
     <meta property="og:image" content="https://sticky.yuwb.dev/og-image.png">
+    <meta property="og:image:alt" content="Sticky Note 便签墙应用预览图">
     <meta property="og:site_name" content="Sticky Note">
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://sticky.yuwb.dev/">
-    <meta name="twitter:title" content="Sticky Note - 物理质感便签墙 | 数字便签">
-    <meta name="twitter:description" content="创建并整理具备真实纸张质感的数字便签，适用于头脑风暴与可视化协作。">
+    <meta name="twitter:title" content="Sticky Note 便签墙 - 真实纸张质感的数字便签应用">
+    <meta name="twitter:description" content="创建并整理具备真实纸张质感的数字便签，适用于头脑风暴、任务规划与可视化协作。">
     <meta name="twitter:image" content="https://sticky.yuwb.dev/twitter-image.png">
+    <meta name="twitter:image:alt" content="Sticky Note 便签墙应用预览图">
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://sticky.yuwb.dev/">
+    <link rel="alternate" href="https://sticky.yuwb.dev/" hreflang="zh-CN">
+    <link rel="alternate" href="https://sticky.yuwb.dev/" hreflang="x-default">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/logo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/logo.png">
+    <link rel="manifest" href="/manifest.webmanifest">
     
     <!-- Fonts -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "name": "Sticky Note 便签墙",
+            "url": "https://sticky.yuwb.dev/",
+            "inLanguage": "zh-CN",
+            "description": "具备真实纸张质感的数字便签墙，适用于头脑风暴、任务规划与灵感记录。"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "Sticky Note",
+            "applicationCategory": "ProductivityApplication",
+            "operatingSystem": "Web",
+            "url": "https://sticky.yuwb.dev/",
+            "image": "https://sticky.yuwb.dev/og-image.png",
+            "inLanguage": "zh-CN",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          }
+        ]
+      }
+    </script>
 </head>
 <body class="wall-minimal">
+    <noscript>
+      Sticky Note 需要启用 JavaScript 才能正常运行。启用后可使用数字便签墙进行头脑风暴、任务规划和灵感记录。
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
 </body>
